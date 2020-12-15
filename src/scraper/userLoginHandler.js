@@ -8,12 +8,12 @@ const debug = require('debug')('userLogin');
 const getCredentials = async (context) => {
     const keys = encrypt.getSecret(context);
     if(!keys){
-        const creds = await getLoginDataFromUser();
+        const creds = await getLoginDataFromUser(context);
         return creds;
     }
     const encryptedCreds = await encrypt.getCredentialsFromSystem();
     if(!encryptedCreds){
-        const creds = await getLoginDataFromUser();
+        const creds = await getLoginDataFromUser(context);
         return creds;
     }
 

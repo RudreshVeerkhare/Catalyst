@@ -68,7 +68,7 @@ const getWebviewContent = (context, problemData) => {
                     tex2jax: {inlineMath: [['$$$','$$$']], displayMath: [['$$$$$$','$$$$$$']]}
                 });
             </script>
-            <script type="text/javascript" src="${mathJaxUri}?config=TeX-AMS_HTML-full"></script>
+            <script type="text/javascript" src="https://assets.codeforces.com/mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script>
         <body>
             <div id="root">
             </div>

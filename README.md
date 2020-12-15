@@ -3,7 +3,7 @@
 You can edit/add/remove test cases as you like, and when you are done, it can submit your code and then track the submission in realtime.
 
 ## Quick Start
-![quickStartGif](/readme/CatalystQuickStart.gif)
+![quickStartGif](https://raw.githubusercontent.com/RudreshVeerkhare/Catalyst/main/readme/CatalystQuickStart.gif)
 1. Open any folder in VS code.
 2. Press `Ctrl + Alt + P` or use command **Add Problem** from command palette.
 3. Enter probelm url from Codeforces and then select language  
@@ -20,12 +20,6 @@ After this VS code layout will split into 2 colomns, in left column there will b
     * C++
     * Python
     * Java
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
 Encrypted Credentials are stored in the system's keychain. On macOS the passwords are managed by the Keychain, on Linux they are managed by the Secret Service API/libsecret, and on Windows they are managed by Credential Vault.  

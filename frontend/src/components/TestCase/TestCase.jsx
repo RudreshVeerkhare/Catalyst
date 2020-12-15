@@ -38,7 +38,7 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
         }
         const userOut = data.result.stdout.replace(/(\r\n|\n)/gm, "");
         const out = data.output.replace(/(\r\n|\n)/gm, "");
-        if(!data.result.timeout && userOut === out){
+        if(!data.result.timeout && userOut === out && data.result.stderr == ""){
             setBgColor(COLOR.CORRECT);
             setCollapsed(true);
             return;
