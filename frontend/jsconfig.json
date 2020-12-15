@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"jsx": "react",
+		"checkJs": true,  /* Typecheck .js files. */
+		"lib": [
+			"es6",
+			"dom"
+		]
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

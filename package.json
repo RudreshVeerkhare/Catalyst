@@ -1,0 +1,151 @@
+{
+	"name": "catalyst",
+	"displayName": "Catalyst",
+	"description": "Accelarates Competative Coding on Codeforces",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.51.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./src/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "catalyst.problemUrl",
+				"title": "Add Problem"
+			},
+			{
+				"command": "catalyst.updateLoginDetails",
+				"title": "Update Login Details"
+			}
+		],
+		"keybindings": [
+			{
+				"key": "ctrl+alt+p",
+				"command": "catalyst.problemUrl"
+			}
+		],
+		"configuration": {
+			"title": "Catalyst",
+			"properties": {
+				"catalyst.default.layoutRatio": {
+					"title": "Layout Ratio",
+					"type": "number",
+					"default": 50,
+					"description": "percent of screen occupied by webview",
+					"minimum": 30,
+					"maximum": 70
+				},
+				"catalyst.default.language": {
+					"title": "Default Language",
+					"type": "string",
+					"description": "Language for coding",
+					"default": "Always Ask",
+					"enum": [
+						"Always Ask",
+						"c++",
+						"python",
+						"java"
+					]
+				},
+				"catalyst.lang.python.interpreter": {
+					"description": "Compiler alias name ex. python, python3 or py.",
+					"type": "string",
+					"default": "python3"
+				},
+				"catalyst.lang.python.args": {
+					"title": "Args for python file",
+					"type": "string",
+					"default": "",
+					"description": "space seperated args ex. '-Wignore -u'"
+				},
+				"catalyst.lang.cpp.compiler": {
+					"description": "Compiler alias name ex. g++",
+					"type": "string",
+					"default": "g++"
+				},
+				"catalyst.lang.cpp.args": {
+					"title": "Args for c++ compiler",
+					"type": "string",
+					"default": "",
+					"description": "space seperated args ex. '-Wmaybe-uninitialized -std=c++14'"
+				},
+				"catalyst.lang.java.compiler": {
+					"description": "Compiler alias name ex. javac",
+					"type": "string",
+					"default": "javac"
+				},
+				"catalyst.lang.java.interpreter": {
+					"description": "Compiler alias name ex. java",
+					"type": "string",
+					"default": "java"
+				},
+				"catalyst.lang.java.compile.args": {
+					"title": "Args for java compiler",
+					"type": "string",
+					"default": "",
+					"description": "space seperated args ex. '-verbose'"
+				},
+				"catalyst.lang.java.runtime.args": {
+					"title": "Args for java interpreter",
+					"type": "string",
+					"default": "",
+					"description": "space seperated args ex. '-verbose'"
+				},
+				"catalyst.lang.java.mainClass": {
+					"title": "Name of main class",
+					"type": "string",
+					"default": "Main",
+					"description": "While running testcases on java program, catalyst will look for Main class with given name."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.0",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.51.0",
+		"eslint": "^7.9.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"typescript": "^4.0.2",
+		"vscode-test": "^1.4.0",
+		"webpack": "^5.8.0",
+		"webpack-cli": "^4.2.0"
+	},
+	"dependencies": {
+		"@babel/core": "^7.12.9",
+		"@babel/preset-react": "^7.12.7",
+		"axios": "^0.21.0",
+		"axios-cookiejar-support": "^1.0.1",
+		"babel-loader": "^8.2.1",
+		"cheerio": "^1.0.0-rc.3",
+		"css-loader": "^5.0.1",
+		"debug": "^4.3.1",
+		"http-proxy": "^1.18.1",
+		"keytar": "^7.2.0",
+		"react": "^17.0.1",
+		"react-contenteditable": "^3.3.5",
+		"react-dom": "^17.0.1",
+		"react-spinners": "^0.9.0",
+		"request": "^2.88.2",
+		"style-loader": "^2.0.0",
+		"tough-cookie": "^4.0.0",
+		"urijs": "^1.19.2",
+		"websocket": "^1.0.33"
+	}
+}
