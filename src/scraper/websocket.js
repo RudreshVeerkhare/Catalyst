@@ -3,6 +3,7 @@ const wsClient = require('websocket').client;
 const client = new wsClient();
 const URL = 'wss://pubsub.codeforces.com/ws/';
 let progressHandler = undefined;
+let connection = undefined;
 
 client.on('connectFailed', err => {
     console.log(`ERROR => ${err}`);
@@ -10,11 +11,11 @@ client.on('connectFailed', err => {
 
 client.on('connect', conn => {
     console.log('Websocket client connected');
-
+    connection = conn;
     conn.on('close', () => {
+        connection = undefined;
         console.log("Connection closed");
     });
-
     conn.on('message', msg => {
         let data = JSON.parse(JSON.parse(msg.utf8Data).text);
         if(data.t == 's')
@@ -46,6 +47,11 @@ const connect = (channels, progress) => {
         })
     });
 
+}
+
+const closeConnection = async () => {
+    if(!connection) return;
+    await connection.close();
 }
 
 
@@ -94,5 +100,6 @@ const isWating = verdictString => {
 }
 
 module.exports = {
-    connect
+    connect,
+    closeConnection
 }

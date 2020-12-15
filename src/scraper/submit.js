@@ -1,5 +1,4 @@
 const client = require('./client');
-const vscode = require('vscode');
 const socket = require('./websocket');
 
 const Submit = async (problem, credentials, progressHandler) => {
@@ -44,15 +43,19 @@ const Submit = async (problem, credentials, progressHandler) => {
     const promise = socket.connect(data.channels, progressHandler);
 
     [res, success] = await client.submit(problem, auth);
-    if(!success) throw new Error('Submit Failed, Check your internet connection');
-    
+    if(!success) {
+        socket.closeConnection();
+        throw new Error('Submit Failed, Check your internet connection');
+    }
     // checking for submission submission
     const [submitErrText, isSubmitErr] = client.isSubmitError(res);
     if(isSubmitErr){
+        socket.closeConnection();
         progressHandler.report({
             increment: 10,
             message: submitErrText
         });
+
         return false;
     }
 
