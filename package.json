@@ -1,7 +1,7 @@
 {
 	"name": "catalyst",
 	"displayName": "Catalyst",
-	"description": "Accelarates Competative Coding on Codeforces",
+	"description": "Accelerates Competitive Coding on Codeforces",
 	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.51.0"
@@ -12,6 +12,7 @@
 	},
 	"license": "GPLv3",
 	"homepage": "https://github.com/RudreshVeerkhare/Catalyst",
+	"icon": "readme/Catalyst_logo_128X128.webp",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RudreshVeerkhare/Catalyst"
