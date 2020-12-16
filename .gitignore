@@ -1,3 +1,6 @@
+#vsce packages
+*.vsix
+
 # Logs
 logs
 *.log

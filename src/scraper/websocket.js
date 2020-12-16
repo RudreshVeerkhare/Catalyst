@@ -56,7 +56,7 @@ const closeConnection = async () => {
 
 
 const parseData = (data, conn) => {
-    
+    console.log(data);
     if(typeof parseData.lastCase == 'undefined'){
         // in JS functions are also object
         parseData.lastCase = 0;

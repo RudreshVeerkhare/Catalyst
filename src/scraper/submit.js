@@ -52,7 +52,7 @@ const Submit = async (problem, credentials, progressHandler) => {
     if(isSubmitErr){
         socket.closeConnection();
         progressHandler.report({
-            increment: 10,
+            increment: 100,
             message: submitErrText
         });
 
