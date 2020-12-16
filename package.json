@@ -2,7 +2,7 @@
 	"name": "catalyst",
 	"displayName": "Catalyst",
 	"description": "Accelarates Competative Coding on Codeforces",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.51.0"
 	},
@@ -114,12 +114,6 @@
 					"type": "string",
 					"default": "",
 					"description": "space seperated args ex. '-verbose'"
-				},
-				"catalyst.lang.java.mainClass": {
-					"title": "Name of main class",
-					"type": "string",
-					"default": "Main",
-					"description": "While running testcases on java program, catalyst will look for Main class with given name."
 				}
 			}
 		}
