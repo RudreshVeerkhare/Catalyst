@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 const pref = require('../preferences');
 const fileManager = require('../fileManager');
 const path = require('path');
+const fs = require('fs');
 
 let runningBinaries = {};
 
@@ -122,7 +123,7 @@ const getRunningConfig = (language, filePath) => {
             break;
         case "java":
             const binaryPath = path.parse(fileManager.utils.getBinaryLocation(filePath));
-            const binFileName = pref.getJavaMainClassName();
+            const binFileName = getJavaMainClassName(filePath);
             const binaryDir = binaryPath.dir;
             config.args = [
                 '-cp',
@@ -138,6 +139,17 @@ const getRunningConfig = (language, filePath) => {
     }
 
     return config;
+}
+
+const getJavaMainClassName = (filepath) => {
+    // getting the public class name from the file
+    const source = fs.readFileSync(filepath).toString();
+    const match = source.match(/[^{}]*public\s+(final)?\s*class\s+(\w+).*/m);
+    if(!match) {
+        vscode.window.showErrorMessage("No public class in code");
+        throw new Error("No public class in code");
+    }
+    return match[2];
 }
 
 // exports 

@@ -4,7 +4,6 @@ const fileManager = require('../fileManager');
 const codeRunner = require('../codeRunner');
 const Submit = require('../scraper/submit');
 const userLoginHandler = require('../scraper/userLoginHandler');
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 let currentPanel = undefined;
 let Context = undefined;
 let lang = undefined;
@@ -156,7 +155,7 @@ const submitProblem = async (problemData, progress) => {
     problem.langId = problemData.langId;
     problem.submitUrl = problemData.submitUrl;
 
-    console.log(problem);
+    // console.log(problem);
     progress.report({
         increment: 10,
         message: "Decrypting Credentials.."
@@ -181,7 +180,16 @@ const runCases = async (problemData, id = null) => {
         command: CMD_NAMES.COMPILE,
         data: true
     });
-    const compileExitCode = await codeRunner.compiler.compileSourceCode(problemData);
+    try{
+        const compileExitCode = await codeRunner.compiler.compileSourceCode(problemData);
+    }catch(err){
+        vscode.window.showErrorMessage(err.message);
+        await sendData({
+            command: CMD_NAMES.COMPILE,
+            data: false
+        });
+        throw err;
+    }
     await sendData({
         command: CMD_NAMES.COMPILE,
         data: false

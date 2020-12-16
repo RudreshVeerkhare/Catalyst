@@ -4,6 +4,7 @@ const client = new wsClient();
 const URL = 'wss://pubsub.codeforces.com/ws/';
 let progressHandler = undefined;
 let connection = undefined;
+let submissionId = undefined;
 
 client.on('connectFailed', err => {
     console.log(`ERROR => ${err}`);
@@ -29,7 +30,7 @@ client.on('connect', conn => {
  * 
  * @param {Array} channels - list of all available channels 
  */
-const connect = (channels, progress) => {
+const connect = (channels, progress, subId) => {
     let url = URL;
     for(let token of channels){
         if(!token) continue;
@@ -38,12 +39,14 @@ const connect = (channels, progress) => {
     console.log(url);
 
     // connecting to socket
+    submissionId = subId;
     progressHandler = progress;
     client.connect(url);
 
     return new Promise(resolve => {
+        const onClose = () => resolve();
         client.addListener('connect', conn => {
-            conn.on('close', () => resolve());
+            conn.on('close', onClose);
         })
     });
 
@@ -56,12 +59,12 @@ const closeConnection = async () => {
 
 
 const parseData = (data, conn) => {
-    console.log(data);
+    if(!submissionId || data.d[1] != submissionId) return;
+    // console.log(data);
     if(typeof parseData.lastCase == 'undefined'){
         // in JS functions are also object
-        parseData.lastCase = 0;
+        parseData.lastCase = -1;
     }
-
     const verdictString = data.d[6];
     const passedTestCount = data.d[7];
     const judgedTestCount = data.d[8];
@@ -71,9 +74,15 @@ const parseData = (data, conn) => {
     const wating = isWating(verdictString);
     if(parseData.lastCase < judgedTestCount || !wating){
         if(wating){
-            progressHandler.report({
-                message: `Running on testcase ${judgedTestCount}`
-            });
+            if(judgedTestCount == 0){
+                progressHandler.report({
+                    message: `In Queue...`
+                });
+            } else {
+                progressHandler.report({
+                    message: `Running on testcase ${judgedTestCount}`
+                });
+            }
         }else{
             progressHandler.report({
                 increment: 100,

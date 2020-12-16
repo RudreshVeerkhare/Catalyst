@@ -36,8 +36,8 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
             setBgColor("");
             return;
         }
-        const userOut = data.result.stdout.replace(/(\r\n|\n)/gm, "");
-        const out = data.output.replace(/(\r\n|\n)/gm, "");
+        const userOut = data.result.stdout.replace(/(\r\n|\n)/gm, "").trim();
+        const out = data.output.replace(/(\r\n|\n)/gm, "").trim();
         if(!data.result.timeout && userOut === out && data.result.stderr == ""){
             setBgColor(COLOR.CORRECT);
             setCollapsed(true);
@@ -135,7 +135,7 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
                 }}
             >
                 <div className="title" style={{ backgroundColor: bgColor }}>
-                    Output {index}
+                    Expected Output {index}
                 </div>
                 <pre
                     contentEditable={true}
@@ -158,7 +158,7 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
                 style={{ display: collapsed ? "none" : "" }}
             >
                 <div className="title" style={{ backgroundColor: bgColor }}>
-                    User Output {index}
+                    Program Output {index}
                     <div className="controls">
                         { data.result && data.result.signal ?
                         <div className="signal" style={{color: "red"}}>

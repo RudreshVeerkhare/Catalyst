@@ -103,12 +103,9 @@ const getChannelsAndCsrf = async (url) => {
     return {
         csrf_token,
         channels : [
-            globalChannel,
-            userChannel,
-            userShowMessageChannel,
-            contentChannel,
             participantChannel,
-            talkChannel
+            contentChannel,
+            globalChannel,
         ]
     };
 }
@@ -221,6 +218,13 @@ const isLoginError = (res) => {
     }
 }
 
+const getSubmissionId = (res) => {
+    const $ = cheerio.load(res.data);
+    const id = $('tr.first-row').next().attr('data-submission-id');
+    
+    return id;
+}
+
 module.exports = {
     submit,
     login,
@@ -234,5 +238,6 @@ module.exports = {
     resetCookies,
     getChannelsAndCsrf,
     isSubmitError,
-    isLoginError
+    isLoginError,
+    getSubmissionId
 }

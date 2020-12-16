@@ -39,18 +39,16 @@ const Submit = async (problem, credentials, progressHandler) => {
     });
     const data = await client.getChannelsAndCsrf(problem.submitUrl);
     auth.csrf_token = data.csrf_token;
-    // starting websockets 
-    const promise = socket.connect(data.channels, progressHandler);
 
     [res, success] = await client.submit(problem, auth);
     if(!success) {
-        socket.closeConnection();
+        // socket.closeConnection();
         throw new Error('Submit Failed, Check your internet connection');
     }
     // checking for submission submission
     const [submitErrText, isSubmitErr] = client.isSubmitError(res);
     if(isSubmitErr){
-        socket.closeConnection();
+        // socket.closeConnection();
         progressHandler.report({
             increment: 100,
             message: submitErrText
@@ -58,7 +56,10 @@ const Submit = async (problem, credentials, progressHandler) => {
 
         return false;
     }
-
+    const submissionId = client.getSubmissionId(res);
+    console.log(`Submission Id =>> ${submissionId}`);
+    // starting websockets 
+    const promise = socket.connect(data.channels, progressHandler, submissionId);
     // waits till result arrive
     await promise;
     return true;

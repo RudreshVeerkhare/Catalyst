@@ -4,6 +4,7 @@ const pref = require('../preferences');
 const path = require('path');
 const outChannel = require('./outputChannel');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 // functions here
 const compileSourceCode = async (problemData) => {
@@ -74,8 +75,11 @@ const skipCompile = (language) => {
 const getLangConfig = (language, filePath) => {
     
     let config = {};
-    
-    // get compiler alias
+    const binPath = fileManager.utils.getBinaryLocation(filePath);
+    let tempPath = undefined;
+    if(language == "java") 
+        tempPath = createJavaSorce(filePath, binPath);
+    // get compiler alias   
     config.command = pref.getCompilerAlias(language);
 
     // add args
@@ -85,15 +89,15 @@ const getLangConfig = (language, filePath) => {
             config.args = [
                 filePath,
                 '-o',
-                fileManager.utils.getBinaryLocation(filePath),
+                binPath,
                 ...args
             ];
             break;
         case "java":
             config.args = [
-                filePath,
+                tempPath,
                 '-d',
-                path.dirname(fileManager.utils.getBinaryLocation(filePath)),
+                path.dirname(binPath),
                 ...args
             ];
             break;
@@ -104,6 +108,17 @@ const getLangConfig = (language, filePath) => {
     }
 
     return config;
+}
+
+const createJavaSorce = (filePath, binPath) => {
+    const source = fs.readFileSync(filePath).toString();
+    const match = source.match(/[^{}]*public\s+(final)?\s*class\s+(\w+).*/m);
+    if(!match) {
+        throw new Error("No public class in code");
+    }
+    const tempPath = path.join(path.dirname(binPath), `${match[2]}.java`);
+    fs.writeFileSync(tempPath, source);
+    return tempPath;
 }
 
 // exports here
