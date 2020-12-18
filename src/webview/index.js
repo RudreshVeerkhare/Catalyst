@@ -3,7 +3,6 @@ const utils = require('./utils');
 const fileManager = require('../fileManager');
 const codeRunner = require('../codeRunner');
 const Submit = require('../scraper/submit');
-const userLoginHandler = require('../scraper/userLoginHandler');
 let currentPanel = undefined;
 let Context = undefined;
 let lang = undefined;
@@ -157,19 +156,20 @@ const submitProblem = async (problemData, progress) => {
     problem.langId = problemData.langId;
     problem.submitUrl = problemData.submitUrl;
 
-    // console.log(problem);
-    progress.report({
-        increment: 10,
-        message: "Decrypting Credentials.."
-    });
-    const creds = await userLoginHandler.getCredentials(Context);
-    progress.report({
-        increment: 10,
-        message: "Credentials Decrypted.."
-    });
     // Submitting problem
-    const success = await Submit(problem, creds, progress);
     const sleep = () => new Promise(resolve => setTimeout(resolve, 7000));
+    let success;
+    try{
+        success = await Submit(Context, problem, progress);
+    } catch(err) {
+        console.log(err);
+        progress.report({
+            increment: 100,
+            message: err.message
+        });
+        await sleep();
+        return false;
+    }
     await sleep();
     return success;
 }

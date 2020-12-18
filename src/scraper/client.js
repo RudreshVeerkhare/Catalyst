@@ -6,10 +6,67 @@ const qs = require('querystring');
 const debug = require('debug')('client');
 const cf = require('./codeforces');
 const fs = require('fs');
+const path = require('path');
+
+// 10 sec timeout on response
+axios.defaults.timeout = 10000;
 // setting up cookies
 axiosCookieJarSupport(axios);
+let cookieStorePath = undefined;
+let authStorePath = undefined;
+let cookieJar = undefined;
+let auth = undefined;
 
-let cookieJar = new tough.CookieJar();
+
+const loadCookies = (context) => {
+    const folder = context.globalStorageUri.fsPath;
+    if(!fs.existsSync(folder)){
+        fs.mkdirSync(folder);
+    }
+    cookieStorePath = path.join(folder, `cookie.json`);
+    if(fs.existsSync(cookieStorePath)){
+        // reading saved cookie from store
+        const cookieData = JSON.parse(fs.readFileSync(cookieStorePath));
+        // deserializing the cookieData
+        cookieJar = tough.CookieJar.deserializeSync(cookieData);
+        return;
+    }
+
+    cookieJar = new tough.CookieJar();
+}
+
+const loadAuth = async (context) => {
+    const folder = context.globalStorageUri.fsPath;
+    if(!fs.existsSync(folder)){
+        fs.mkdirSync(folder);
+    }
+    authStorePath = path.join(folder, `auth.json`);
+    if(fs.existsSync(authStorePath)){
+        // reading saved auth data from store
+        const authData = JSON.parse(fs.readFileSync(authStorePath));
+        auth = authData;
+        return auth;
+    }
+
+    auth = {
+        ftaa: getFtaa(),
+        bfaa: getBfaa(),
+        csrf_token: await getCsrfToken(),
+        tta: getTta()
+    };
+    saveAuth();
+    return auth;
+}
+const saveAuth = () => {
+    if(!authStorePath) return;
+    fs.writeFileSync(authStorePath, JSON.stringify(auth));
+}
+const saveCookies = () => {
+    if(!cookieStorePath) return;
+    fs.writeFileSync(cookieStorePath, JSON.stringify(cookieJar.serializeSync()));
+}
+
+
 
 const resetCookies = () => {
     cookieJar = new tough.CookieJar();
@@ -77,7 +134,7 @@ const getCsrfToken = async (url = 'https://codeforces.com/enter') => {
         jar: cookieJar,
         withCredentials: true
     });
-
+    saveCookies();
     const $ = cheerio.load(response.data);
     const csrf_token = $('form input[name="csrf_token"]').attr('value');
     return csrf_token;
@@ -93,19 +150,27 @@ const getChannelsAndCsrf = async (url) => {
     const $ = cheerio.load(response.data);
     const csrf_token = $('form input[name="csrf_token"]').attr('value');
     // channels 
-    const globalChannel = $("meta[name=\"gc\"]").attr("content");
+    const globalChannel = $('head > meta[name="gc"]').attr("content");
     const userChannel = $("meta[name=\"uc\"]").attr("content");
     const userShowMessageChannel = $("meta[name=\"usmc\"]").attr("content")
-    const contentChannel = $("meta[name=\"cc\"]").attr("content");
-    const participantChannel = $("meta[name=\"pc\"]").attr("content");
+    const contentChannel = $('head > meta[name="cc"]').attr("content");
+    const participantChannel = $('head > meta[name="pc"]').attr("content");
     const talkChannel = $("meta[name=\"tc\"]").attr("content");
 
     return {
         csrf_token,
-        channels : [
+        s_channels : [
             participantChannel,
             contentChannel,
             globalChannel,
+        ],
+        channels: [
+            globalChannel,
+            userChannel,
+            userShowMessageChannel,
+            contentChannel,
+            participantChannel,
+            talkChannel
         ]
     };
 }
@@ -132,7 +197,8 @@ const login = async (credentials, auth) => {
         bfaa: auth.bfaa,
         handleOrEmail: credentials.handle,
         password: credentials.password,
-        _tta: auth.tta
+        _tta: auth.tta,
+        remember: true
     }
 
     const headers = getHeaders({
@@ -148,6 +214,8 @@ const login = async (credentials, auth) => {
             withCredentials: true
         });
         console.log('Login Successful');
+        // saving cookies
+        saveCookies();
         return [response, true];
     } catch (err) {
         console.log('Login Failed');
@@ -190,7 +258,8 @@ const submit = async (problem, auth) => {
         return [response, true];
     } catch (err) {
         console.log('Submit Failed', err);
-        return [null, false];
+
+        throw err;
     }
 }
 
@@ -239,5 +308,7 @@ module.exports = {
     getChannelsAndCsrf,
     isSubmitError,
     isLoginError,
-    getSubmissionId
+    getSubmissionId,
+    loadCookies,
+    loadAuth
 }

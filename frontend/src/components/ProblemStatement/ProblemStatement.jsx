@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { vscode } from "../../App.jsx";
 import { MathJax, TestCase, Loader, Selector } from "../index";
 import "./ProblemStatement.css";
@@ -27,6 +27,7 @@ const ProblemStatement = () => {
     });
     const [compiling, setCompiling] = useState(false);
     const [submitSelect, setSubmitSelect] = useState(false);
+    const runAllRef = useRef();
     /*=============================================================*/
     useEffect(() => {
         // mount message listener for messages from backend
@@ -43,12 +44,13 @@ const ProblemStatement = () => {
                     break;
                 }
                 case CMD_NAMES.COMPILE: {
-                    console.log("Compiling msg", message.data);
+                    // console.log("Compiling msg", message.data);
                     setCompiling(message.data);
                     break;
                 }
                 case CMD_NAMES.RUN_ALL_TO_SEND: {
-                    runAllTestcases();
+                    // console.log(runAllRef.current);
+                    runAllRef.current.click();
                     break;
                 }
             }
@@ -63,7 +65,7 @@ const ProblemStatement = () => {
 
     useEffect(() => {
         // saving data in file
-        console.log("Saving data");
+        // console.log("Saving data");
         saveData();
     }, [data]);
 
@@ -109,6 +111,7 @@ const ProblemStatement = () => {
     const runAllTestcases = () => {
         // sends problem data to backend to save it
         if (!data) return;
+        console.log(data);
         vscode.postMessage({
             command: CMD_NAMES.RUN_ALL,
             data: data,
@@ -232,6 +235,7 @@ const ProblemStatement = () => {
                     {/* Controller buttons */}
                     <div className="control-btns">
                         <button
+                            ref={runAllRef}
                             className="run-all"
                             title="Run all testcases"
                             onClick={(e) => runAllTestcases()}

@@ -8,3 +8,5 @@ vsc-extension-quickstart.md
 **/*.map
 **/.eslintrc.json
 frontend/**
+webpack.config.json
+readme/**

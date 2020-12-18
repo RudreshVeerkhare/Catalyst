@@ -12,7 +12,7 @@
 	},
 	"license": "GPLv3",
 	"homepage": "https://github.com/RudreshVeerkhare/Catalyst",
-	"icon": "https://raw.githubusercontent.com/RudreshVeerkhare/Catalyst/main/readme/Catalyst_logo_128X128.webp",
+	"icon": "Catalyst_logo_128X128.webp",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RudreshVeerkhare/Catalyst"

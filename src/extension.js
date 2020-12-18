@@ -47,6 +47,7 @@ function activate(context) {
 				fileManager.saveToCache(data);
 				fileManager.createSourceCodeFile(data);
 			}).catch(err => {
+				console.log(err);
 				vscode.window.showErrorMessage(err.message);
 				checkLaunchWebview(context);
 			})
@@ -67,6 +68,7 @@ function activate(context) {
 			webview.sendData({
 				command: webview.CMD_NAMES.RUN_ALL_TO_SEND
 			});
+			console.log(webview.getTitle());
 		})
 	);
 

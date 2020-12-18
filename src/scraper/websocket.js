@@ -1,65 +1,133 @@
 const wsClient = require('websocket').client;
 
-const client = new wsClient();
 const URL = 'wss://pubsub.codeforces.com/ws/';
 let progressHandler = undefined;
-let connection = undefined;
-let submissionId = undefined;
+let resultSocket = {
+    client: new wsClient(),
+    conn: undefined
+}
+let statusSocket = {
+    client: new wsClient(),
+    conn: undefined,
+    submissionId: undefined
+}
 
-client.on('connectFailed', err => {
-    console.log(`ERROR => ${err}`);
+// listeners for status socket
+// =====================================================================
+
+statusSocket.client.on('connectFailed', err => {
+    console.log(`Status socket ERROR => ${err}`);
 })
 
-client.on('connect', conn => {
-    console.log('Websocket client connected');
-    connection = conn;
+statusSocket.client.on('connect', conn => {
+    // closes connection after 10 sec
+    setTimeout(() => {
+        conn.close()
+    }, 10000);
+    console.log('Status Websocket client connected');
+    statusSocket.conn = conn;
     conn.on('close', () => {
-        connection = undefined;
-        console.log("Connection closed");
+        statusSocket.conn = undefined;
+        console.log("Status Connection closed");
     });
     conn.on('message', msg => {
         let data = JSON.parse(JSON.parse(msg.utf8Data).text);
         if(data.t == 's')
-            parseData(data, conn);
+            parseData(data);
     })
 });
 
+// listeners for result socket
+// =====================================================================
+resultSocket.client.on('connectFailed', err => {
+    console.log(`Result socket ERROR => ${err}`);
+})
 
+resultSocket.client.on('connect', conn => {
+    // closes connection after 10 sec
+    setTimeout(() => {
+        conn.close()
+    }, 10000);
+    console.log('Result Websocket client connected');
+    resultSocket.conn = conn;
+    conn.on('close', () => {
+        resultSocket.conn = undefined;
+        console.log("Result Websocket Connection closed");
+    });
+    conn.on('message', msg => {
+        let data = JSON.parse(JSON.parse(msg.utf8Data).text);
+        if(data.t == 's'){
+            console.log(data);
+            parseData(data, true);
+        }
+    })
+});
+
+//=====================================================================
+
+
+const setProgressHandler = (progress) => {
+    progressHandler = progress;
+}
 
 /**
  * 
- * @param {Array} channels - list of all available channels 
+ * @param {Object} channels - list of all available channels 
  */
-const connect = (channels, progress, subId) => {
+const connectResultSocket = (channels) => {
     let url = URL;
     for(let token of channels){
         if(!token) continue;
-        url += `s_${token}/`
+        url += `${token}/`
     }
     console.log(url);
 
     // connecting to socket
-    submissionId = subId;
-    progressHandler = progress;
-    client.connect(url);
+
+    resultSocket.client.connect(url);
 
     return new Promise(resolve => {
         const onClose = () => resolve();
-        client.addListener('connect', conn => {
+        resultSocket.client.addListener('connect', conn => {
             conn.on('close', onClose);
         })
     });
 
 }
 
-const closeConnection = async () => {
-    if(!connection) return;
-    await connection.close();
+
+/**
+ * 
+ * @param {Object} s_channels - list of all available channels 
+ */
+const connectStatusSocket = (s_channels, subId) => {
+    let url = URL;
+    for(let token of s_channels){
+        if(!token) continue;
+        url += `s_${token}/`
+    }
+    console.log(url);
+
+    // connecting to socket
+    statusSocket.submissionId = subId;
+    statusSocket.client.connect(url);
+
+    return new Promise(resolve => {
+        const onClose = () => resolve();
+        statusSocket.client.addListener('connect', conn => {
+            conn.on('close', onClose);
+        })
+    });
+
 }
 
+const closeSockets = () => {
+    if(resultSocket.conn !== undefined ) resultSocket.conn.close();
+    if(statusSocket.conn !== undefined ) statusSocket.conn.close();
+}
 
-const parseData = (data, conn) => {
-    if(!submissionId || data.d[1] != submissionId) return;
+const parseData = (data, result=false) => {
+    if(!result && (!statusSocket.ubmissionId || data.d[1] != statusSocket.submissionId)) return;
     // console.log(data);
     if(typeof parseData.lastCase == 'undefined'){
         // in JS functions are also object
@@ -97,8 +165,8 @@ const parseData = (data, conn) => {
         parseData.lastCase = judgedTestCount;
     }
     if(!wating){
-        parseData.lastCase = 0;
-        conn.close();
+        parseData.lastCase = -1;
+        closeSockets();
     }
     
 
@@ -109,6 +177,8 @@ const isWating = verdictString => {
 }
 
 module.exports = {
-    connect,
-    closeConnection
+    connectResultSocket,
+    connectStatusSocket,
+    setProgressHandler,
+    closeSockets
 }
