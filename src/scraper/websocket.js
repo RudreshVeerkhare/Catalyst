@@ -1,5 +1,5 @@
 const wsClient = require('websocket').client;
-
+const TIMEOUT = 30000; // 20 sec
 const URL = 'wss://pubsub.codeforces.com/ws/';
 let progressHandler = undefined;
 let resultSocket = {
@@ -23,7 +23,7 @@ statusSocket.client.on('connect', conn => {
     // closes connection after 10 sec
     setTimeout(() => {
         conn.close()
-    }, 10000);
+    }, TIMEOUT);
     console.log('Status Websocket client connected');
     statusSocket.conn = conn;
     conn.on('close', () => {
@@ -47,7 +47,7 @@ resultSocket.client.on('connect', conn => {
     // closes connection after 10 sec
     setTimeout(() => {
         conn.close()
-    }, 10000);
+    }, TIMEOUT);
     console.log('Result Websocket client connected');
     resultSocket.conn = conn;
     conn.on('close', () => {
@@ -127,7 +127,7 @@ const closeSockets = () => {
 }
 
 const parseData = (data, result=false) => {
-    if(!result && (!statusSocket.ubmissionId || data.d[1] != statusSocket.submissionId)) return;
+    if(!result && (!statusSocket.submissionId || data.d[1] != statusSocket.submissionId)) return;
     // console.log(data);
     if(typeof parseData.lastCase == 'undefined'){
         // in JS functions are also object
