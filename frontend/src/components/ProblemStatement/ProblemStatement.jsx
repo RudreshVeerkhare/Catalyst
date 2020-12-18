@@ -9,6 +9,7 @@ const CMD_NAMES = {
     NEW_DATA: 'scrape',
     CASE_RESULT: 'case-result',
     COMPILE: 'compiling',
+    RUN_ALL_TO_SEND: 'run-all-test-cases-from-key-bindings',
 
     // webview to vscode
     SAVE_DATA: 'save-data',
@@ -37,13 +38,17 @@ const ProblemStatement = () => {
                     break;
                 }
                 case CMD_NAMES.CASE_RESULT: {
-                    console.log(message.data);
+                    // console.log(message.data);
                     addOutput(message.data);
                     break;
                 }
                 case CMD_NAMES.COMPILE: {
                     console.log("Compiling msg", message.data);
                     setCompiling(message.data);
+                    break;
+                }
+                case CMD_NAMES.RUN_ALL_TO_SEND: {
+                    runAllTestcases();
                     break;
                 }
             }

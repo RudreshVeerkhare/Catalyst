@@ -12,7 +12,7 @@
 	},
 	"license": "GPLv3",
 	"homepage": "https://github.com/RudreshVeerkhare/Catalyst",
-	"icon": "readme/Catalyst_logo_128X128.webp",
+	"icon": "https://raw.githubusercontent.com/RudreshVeerkhare/Catalyst/main/readme/Catalyst_logo_128X128.webp",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RudreshVeerkhare/Catalyst"
@@ -41,12 +41,19 @@
 			{
 				"command": "catalyst.updateLoginDetails",
 				"title": "Update Login Details"
+			},
+			{
+				"command": "catalyst.runAllTestCases"
 			}
 		],
 		"keybindings": [
 			{
 				"key": "ctrl+alt+p",
 				"command": "catalyst.problemUrl"
+			},
+			{
+				"key": "ctrl+enter",
+				"command": "catalyst.runAllTestCases"
 			}
 		],
 		"configuration": {

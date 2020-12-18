@@ -12,12 +12,14 @@ const CMD_NAMES = {
     NEW_DATA: 'scrape',
     CASE_RESULT: 'case-result',
     COMPILE: 'compiling',
+    RUN_ALL_TO_SEND: 'run-all-test-cases-from-key-bindings',
 
     // webview to vscode
     SAVE_DATA: 'save-data',
     RUN_ALL: 'run-all-testcases',
     SUBMIT: 'submit-code',
 }
+
 
 
 /**

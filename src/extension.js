@@ -61,6 +61,15 @@ function activate(context) {
 		})
 	);
 
+	// command to run test cases
+	context.subscriptions.push(
+		vscode.commands.registerCommand('catalyst.runAllTestCases', () => {
+			webview.sendData({
+				command: webview.CMD_NAMES.RUN_ALL_TO_SEND
+			});
+		})
+	);
+
 
 	// handeling text editor change events
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
