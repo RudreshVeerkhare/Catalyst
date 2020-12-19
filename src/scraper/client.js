@@ -218,8 +218,8 @@ const login = async (credentials, auth) => {
         saveCookies();
         return [response, true];
     } catch (err) {
-        console.log('Login Failed');
-        return [null, false];
+        console.log('Login Failed', err);
+        return [err, false];
     }
     
 }

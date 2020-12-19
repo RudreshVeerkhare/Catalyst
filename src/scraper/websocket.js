@@ -72,9 +72,12 @@ const setProgressHandler = (progress) => {
 
 /**
  * 
- * @param {Object} channels - list of all available channels 
+ * @param {Array} channels - list of all available channels 
  */
 const connectResultSocket = (channels) => {
+    
+    if(channels.every(val => !val)) return;
+
     let url = URL;
     for(let token of channels){
         if(!token) continue;

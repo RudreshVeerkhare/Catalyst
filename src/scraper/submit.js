@@ -48,7 +48,12 @@ const _submit = async (auth, context, data, problem, progressHandler) => {
     // todo: check if csrf token need to be refreshed
     if(res.config.url == LOGIN_URL){
         await login(auth, context, progressHandler);
-        res = await attemptSubmit({...auth, csrf_token: data.csrf_token}, problem, progressHandler);
+        progressHandler.report({
+            increment: 10,
+            message: "Getting CSRF token..."
+        });
+        let _data = await client.getChannelsAndCsrf(problem.submitUrl);
+        res = await attemptSubmit({...auth, csrf_token: _data.csrf_token}, problem, progressHandler);
     }
 
     // =============================AFTER-SUBMIT==================================//
@@ -101,17 +106,21 @@ const login = async (auth, context, progressHandler) => {
     progressHandler.report({
         message: "Logging in Codeforces..."
     });
-
+    console.log('wating logging in')
     let [res, success] = await client.login(credentials, auth);
+    console.log('got result', success);
     if(!success) {
         throw new Error("Login Failed, Check Your Internet connection");
     }
 
     // checking if login succes
     const [loginErrText, isLoginErr] = client.isLoginError(res);
-    if(isLoginErr)
-        throw new Error(`${loginErrText} (use "Update Login Details" command)`);
+    console.log('got result', success);
 
+    if(isLoginErr){
+        console.log(loginErrText);
+        throw new Error(`${loginErrText} (use "Update Login Details" command)`);
+    }
 
     progressHandler.report({
         message: "Login Successful..."
