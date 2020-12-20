@@ -33,6 +33,7 @@ const loadCookies = (context) => {
     }
 
     cookieJar = new tough.CookieJar();
+
 }
 
 const loadAuth = async (context) => {
@@ -45,6 +46,7 @@ const loadAuth = async (context) => {
         // reading saved auth data from store
         const authData = JSON.parse(fs.readFileSync(authStorePath));
         auth = authData;
+        auth.csrf_token = await getCsrfToken();
         return auth;
     }
 

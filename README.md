@@ -32,3 +32,9 @@ For Linux depending on your distribution, you will need to run the following com
 * Debian/Ubuntu : &ensp;`sudo apt-get install libsecret-1-dev`
 * Red Hat-based : &ensp;`sudo yum install libsecret-devel`
 * Arch Linux : &ensp;`sudo pacman -S libsecret`
+
+## Note
+* Currently Catalyst doesn't support Interactive Problems on Codeforces  
+* Submit option is beta feature so might misbehave sometimes, if you find any issue please report it.
+
+

@@ -3,6 +3,7 @@ const socket = require('./websocket');
 const userLoginHandler = require('./userLoginHandler');
 
 const LOGIN_URL = 'https://codeforces.com/enter';
+HOME_PAGE = 'https://codeforces.com';
 
 const Submit = async (context, problem, progressHandler) => {
     let statusPromise, resultPromise;
@@ -20,7 +21,7 @@ const Submit = async (context, problem, progressHandler) => {
         message: "Getting CSRF token..."
     });
     let data = await client.getChannelsAndCsrf(problem.submitUrl);
-
+    console.log(data);
     try {
         resultPromise = socket.connectResultSocket(data.channels);
         statusPromise = _submit(auth, context, data, problem, progressHandler);
@@ -46,14 +47,15 @@ const _submit = async (auth, context, data, problem, progressHandler) => {
 
     // =======================LOGIN-IF-FAILED============================//
     // todo: check if csrf token need to be refreshed
-    if(res.config.url == LOGIN_URL){
+    console.log(res.config.url, problem.submitUrl);
+    if(res.config.url == LOGIN_URL || res.config.url == HOME_PAGE){
         await login(auth, context, progressHandler);
         progressHandler.report({
             increment: 10,
             message: "Getting CSRF token..."
         });
-        let _data = await client.getChannelsAndCsrf(problem.submitUrl);
-        res = await attemptSubmit({...auth, csrf_token: _data.csrf_token}, problem, progressHandler);
+        data = await client.getChannelsAndCsrf(problem.submitUrl);
+        res = await attemptSubmit({...auth, csrf_token: data.csrf_token}, problem, progressHandler);
     }
 
     // =============================AFTER-SUBMIT==================================//
@@ -74,6 +76,7 @@ const attemptSubmit = async (auth, problem, progressHandler) => {
             increment: 100,
             message: res.message
         });
+        console.log("Submit Failed due to Network issue", res);
         throw new Error("Submit Failed due to Network issue");
     }
 
