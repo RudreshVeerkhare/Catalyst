@@ -85,7 +85,7 @@ const getProblem = (url) => {
                     data.sampleTestcases[index].id = dateId + index;
                     data.sampleTestcases[index].input = processTestcases($(ele).find('pre').html());
                 } else {
-                    data.sampleTestcases[index].output = processTestcases($(ele).find('pre').text());
+                    data.sampleTestcases[index].output = processTestcases($(ele).find('pre').html());
                 }
             })
 
