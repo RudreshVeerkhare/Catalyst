@@ -586,18 +586,19 @@ div.ttypography .MathJax {
 
 .problem-statement .sample-tests .input{
     margin-top: 0.2rem;
+    overflow: hidden;
 }
 
 .problem-statement .sample-tests .output {
     margin-bottom: 1em;
     position: relative;
+    overflow: hidden;
     top: -1px;
 }
 
 .problem-statement .sample-tests pre {
     line-height: 1.25em;
-    padding-top: 0.25em;
-    padding-bottom: 0.25em;
+    padding: 0.25em;
     margin: 0;
     background-color: #efefef;
     max-height: 20rem;
