@@ -1,5 +1,5 @@
 const wsClient = require('websocket').client;
-const TIMEOUT = 30000; // 20 sec
+const TIMEOUT = 30000; // 30 sec
 const URL = 'wss://pubsub.codeforces.com/ws/';
 let progressHandler = undefined;
 let resultSocket = {
@@ -45,9 +45,9 @@ resultSocket.client.on('connectFailed', err => {
 
 resultSocket.client.on('connect', conn => {
     // closes connection after 10 sec
-    setTimeout(() => {
-        conn.close()
-    }, TIMEOUT);
+    // setTimeout(() => {
+    //     conn.close()
+    // }, TIMEOUT);
     console.log('Result Websocket client connected');
     resultSocket.conn = conn;
     conn.on('close', () => {
@@ -101,7 +101,7 @@ const connectResultSocket = (channels) => {
 
 /**
  * 
- * @param {Object} s_channels - list of all available channels 
+ * @param {Array} s_channels - list of all available channels 
  */
 const connectStatusSocket = (s_channels, subId) => {
     let url = URL;

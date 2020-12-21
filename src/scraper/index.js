@@ -83,9 +83,9 @@ const getProblem = (url) => {
                 if (type == "input") {
                     // id for testcase
                     data.sampleTestcases[index].id = dateId + index;
-                    data.sampleTestcases[index].input = $(ele).find('pre').text();
+                    data.sampleTestcases[index].input = processTestcases($(ele).find('pre').html());
                 } else {
-                    data.sampleTestcases[index].output = $(ele).find('pre').text();
+                    data.sampleTestcases[index].output = processTestcases($(ele).find('pre').text());
                 }
             })
 
@@ -104,6 +104,14 @@ const getProblem = (url) => {
         console.log(err);
     })
 */
+
+/**
+ * 
+ * @param {String} data 
+ */
+const processTestcases = (data) => {
+    return data.replace(/<br>/g, '\n');
+}
 
 
 module.exports.getProblem = getProblem;
