@@ -12,7 +12,7 @@
 	},
 	"license": "GPLv3",
 	"homepage": "https://github.com/RudreshVeerkhare/Catalyst",
-	"icon": "Catalyst_logo_128X128.webp",
+	"icon": "icons/Catalyst_logo_128X128.webp",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RudreshVeerkhare/Catalyst"
@@ -44,8 +44,25 @@
 			},
 			{
 				"command": "catalyst.runAllTestCases"
+			},
+			{
+				"command": "catalyst.showHideWebview",
+				"title": "Show/Hide Problem",
+				"icon": {
+					"light": "icons/Symbol-dark.svg",
+					"dark": "icons/Symbol-light.svg"
+				}
+
 			}
 		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "catalyst.showHideWebview",
+					"group": "navigation"
+				}
+			]
+		},
 		"keybindings": [
 			{
 				"key": "ctrl+alt+p",
@@ -54,6 +71,10 @@
 			{
 				"key": "ctrl+enter",
 				"command": "catalyst.runAllTestCases"
+			},
+			{
+				"key": "ctrl+alt+h",
+				"command": "catalyst.showHideWebview"
 			}
 		],
 		"configuration": {

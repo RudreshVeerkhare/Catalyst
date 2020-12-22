@@ -66,6 +66,7 @@ const createWebview = async (problemData, context) => {
 const closeWebview = () => {
     if(currentPanel){
         currentPanel.dispose();
+        currentPanel = undefined;
     }
 }
 

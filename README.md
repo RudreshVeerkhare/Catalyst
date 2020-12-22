@@ -12,7 +12,8 @@ After this VS code layout will split into 2 columns, in the left column there wi
 
 ### Shortcuts
 `Ctrl + Alt + P`&ensp;- &nbsp;Add new problem  
-`Ctrl + Enter`&ensp;- &nbsp;Run all test cases for selected problem
+`Ctrl + Enter`&ensp;- &nbsp;Run all test cases for selected problem  
+`Ctrl + Alt + H`&ensp;- &nbsp;Hide/Show problem panel
 
 ## Features
 * Automatically opens problem statement when source code is opened, so once you add a problem no need to remember URL or name of the problem, Catalyst will do it for you!

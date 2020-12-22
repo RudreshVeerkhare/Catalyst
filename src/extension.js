@@ -6,6 +6,7 @@ const fileManager = require('./fileManager');
 const pref = require('./preferences');
 const { onEditorChanged, checkLaunchWebview } = require('./webview/webviewUpdateManager');
 const userLoginHandler = require('./scraper/userLoginHandler');
+const { web } = require('webpack');
 
 const INPUT_BOX_OPTIONS = {
 	ignoreFocusOut: true,
@@ -19,6 +20,7 @@ function activate(context) {
 	// vars for webview and url
 	let currentPanel = undefined;
 	let problemData = undefined;
+	let showWebview = true;
 
 	// Command to add new problem
 	context.subscriptions.push(
@@ -72,10 +74,35 @@ function activate(context) {
 		})
 	);
 
+	// command to show/hide webview
+	context.subscriptions.push(
+		vscode.commands.registerCommand('catalyst.showHideWebview', async () => {
+			if(showWebview){
+				const webviewPanel = webview.getWebviewPanel();
+				if (!webviewPanel){
+					const res = await checkLaunchWebview(context);
+					if(!res){
+						vscode.window.showErrorMessage("No problem associated with this file");
+						return;
+					}
+				}
+				webview.closeWebview();
+				showWebview = false;
+			} else {
+				const res = await checkLaunchWebview(context);
+				if(!res){
+					vscode.window.showErrorMessage("No problem associated with this file");
+					return;
+				}
+				showWebview = true;
+			}
+		})
+	);
+
 
 	// handeling text editor change events
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
-		onEditorChanged(editor, context);
+		if(showWebview) onEditorChanged(editor, context);
 	});
 
 	vscode.workspace.onDidCloseTextDocument((e) => {
@@ -87,7 +114,7 @@ function activate(context) {
 	});
 	
 	// activate webview if current editor has webview associated with it
-	checkLaunchWebview(context);
+	if(showWebview) checkLaunchWebview(context);
 
 }
 exports.activate = activate;

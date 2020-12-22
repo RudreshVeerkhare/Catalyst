@@ -11,11 +11,11 @@ const webview = require('./index');
 const onEditorChanged = async (editor, context) => {
 
     // check if editor object is valid
-    if (!editor) return;
+    if (!editor) return false;
 
     // getting absolute path to file
     const absPath = editor.document.fileName;
-    if(!absPath) return;
+    if(!absPath) return false;
     // when editor is changed
     // console.log(`Editor changed to ${absPath}`);
 
@@ -27,7 +27,7 @@ const onEditorChanged = async (editor, context) => {
         // if file doesn't exists then close the webview
         console.log("Webview Closed");
         webview.closeWebview();
-        return;
+        return false;
     }
 
     // reading data from file
@@ -36,7 +36,7 @@ const onEditorChanged = async (editor, context) => {
     // console.log(webview.getTitle(), webview.getLang());
     if(problemData.title == webview.getTitle() && problemData.language ==  webview.getLang()){
         // already opened editor is same
-        return;
+        return false;
     }
 
     // check if webview panel is open if not then create and populate
@@ -51,14 +51,16 @@ const onEditorChanged = async (editor, context) => {
         data: problemData
     });
 
+    return true;
+
 }
 
-const checkLaunchWebview = (context) => {
+const checkLaunchWebview = async (context) => {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         return;
     }
-    onEditorChanged(editor, context);
+    return await onEditorChanged(editor, context);
 };
 
 module.exports = {
