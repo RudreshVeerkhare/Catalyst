@@ -17,6 +17,12 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
 
     /*=============================================================*/
 
+    const onInputClick = (e) => {
+        if (e.target.classList.contains('title')){
+            setCollapsed((collapsed) => !collapsed);
+        }
+    }
+
     const toggleView = () => {
         setCollapsed((collapsed) => !collapsed);
     };
@@ -67,6 +73,7 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
         <div key={data.id}>
             <div
                 className="input"
+                onClick={onInputClick}
                 style={{ borderBottom: collapsed ? "none" : "" }}
             >
                 <div className="title" style={{ backgroundColor: bgColor }}>

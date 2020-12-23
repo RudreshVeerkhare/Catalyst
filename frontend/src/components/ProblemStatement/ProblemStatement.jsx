@@ -237,7 +237,7 @@ const ProblemStatement = () => {
                         <button
                             ref={runAllRef}
                             className="run-all"
-                            title="Run all testcases"
+                            title="Run all testcases (Ctrl+Enter)"
                             onClick={(e) => runAllTestcases()}
                         >
                             <div className="material-icons">play_arrow</div>Run
