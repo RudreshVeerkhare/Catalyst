@@ -1,6 +1,7 @@
 const client = require('./client');
 const socket = require('./websocket');
 const userLoginHandler = require('./userLoginHandler');
+const httpSubmitStatus = require('./httpSubmitStatus');
 
 const LOGIN_URL = 'https://codeforces.com/enter';
 HOME_PAGE = 'https://codeforces.com';
@@ -61,7 +62,10 @@ const _submit = async (auth, context, data, problem, progressHandler) => {
     // =============================AFTER-SUBMIT==================================//
     const subId = afterSubmit(progressHandler, res);
 
-    const statusPromise = await socket.connectStatusSocket(data.s_channels, subId);
+    const statusPromise = socket.connectStatusSocket(data.s_channels, subId);
+    const httpStatusPromise = httpSubmitStatus.getUpdate(progressHandler, subId);
+
+    await Promise.race([statusPromise, httpStatusPromise]);
 }
 
 const attemptSubmit = async (auth, problem, progressHandler) => {
