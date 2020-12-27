@@ -1,5 +1,5 @@
 # Catalyst
-**Catalyst** is a VS code Extension to accelerate the process of solving problems on [Codeforces](https://codeforces.com/). It automatically fetches the problem and displays it, parses test cases, runs and evaluates your code on test cases.
+[Catalyst](https://marketplace.visualstudio.com/items?itemName=RudreshVeerkhare.catalyst) is a VS code Extension to accelerate the process of solving problems on [Codeforces](https://codeforces.com/). It automatically fetches the problem and displays it, parses test cases, runs and evaluates your code on test cases.
 You can edit/add/remove test cases as you like, and when you are done, it can submit your code and then track the submission in realtime.
 
 ## Quick Start
