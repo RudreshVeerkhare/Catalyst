@@ -77,24 +77,15 @@ function activate(context) {
 	// command to show/hide webview
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catalyst.showHideWebview', async () => {
-			if(showWebview){
-				const webviewPanel = webview.getWebviewPanel();
-				if (!webviewPanel){
-					const res = await checkLaunchWebview(context);
-					if(!res){
-						vscode.window.showErrorMessage("No problem associated with this file");
-						return;
-					}
-				}
-				webview.closeWebview();
-				showWebview = false;
-			} else {
+			const webviewPanel = webview.getWebviewPanel();
+			if (!webviewPanel){
 				const res = await checkLaunchWebview(context);
 				if(!res){
 					vscode.window.showErrorMessage("No problem associated with this file");
 					return;
 				}
-				showWebview = true;
+			} else {
+				webview.closeWebview();
 			}
 		})
 	);
