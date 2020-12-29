@@ -12,18 +12,18 @@ const URL = 'https://codeforces.com/problemset/status?my=on';
  * @param {String} url - submission status url (optional) default = https://codeforces.com/problemset/status?my=on 
  */
 const getUpdate = async (progressHandler, subId, url = undefined) => {
-    if(!url) url = URL;
+    if (!url) url = URL;
     let accepted = false;
     // if something goes wrong then then close loop after 45 sec
     setTimeout(() => {
         accepted = true
     }, 45000);
-    while(!accepted){
+    while (!accepted) {
         // await sleep(INTERVAL);
         const res = await client.get(url);
         const data = getStatus(res.data, subId);
 
-        if(data.waiting == false){
+        if (data.waiting == false) {
             progressHandler.report({
                 increment: 100,
                 message: `Verdict: ${data.statusText}
@@ -31,8 +31,8 @@ const getUpdate = async (progressHandler, subId, url = undefined) => {
                 ${data.memory}`
             });
             return Promise.resolve();
-        } 
-        if(data.waiting == true) {
+        }
+        if (data.waiting == true) {
             progressHandler.report({
                 message: data.statusText
             });
@@ -60,18 +60,18 @@ const getStatus = (res, submissionId) => {
     // console.log($('tbody').html());
     $('tbody').children().each((i, row) => {
         const id = $(row).attr('data-submission-id');
-        if (id == submissionId){
-            data.waiting = $(row).find('.status-verdict-cell').attr('waiting') == 'true' ? true: false;
+        if (id == submissionId) {
+            data.waiting = $(row).find('.status-verdict-cell').attr('waiting') == 'true' ? true : false;
             data.statusText = $(row).find('.status-verdict-cell').text().trim();
             data.time = $(row).find('.time-consumed-cell').text().trim();
             data.memory = $(row).find('.memory-consumed-cell').text().trim();
-            console.log(data);
+            //console.log(data);
             return data;
         }
     });
 
     return data;
-    
+
 }
 
 module.exports = {

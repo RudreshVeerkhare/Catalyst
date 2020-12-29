@@ -6,11 +6,10 @@ const fileManager = require('./fileManager');
 const pref = require('./preferences');
 const { onEditorChanged, checkLaunchWebview } = require('./webview/webviewUpdateManager');
 const userLoginHandler = require('./scraper/userLoginHandler');
-const { web } = require('webpack');
 
 const INPUT_BOX_OPTIONS = {
 	ignoreFocusOut: true,
-	prompt: "Enter the URL of the problem",  
+	prompt: "Enter the URL of the problem",
 };
 
 /**
@@ -26,14 +25,14 @@ function activate(context) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catalyst.problemUrl', () => {
 			// don't create new panel if exists
-			if(currentPanel != undefined){
+			if (currentPanel != undefined) {
 				currentPanel.reveal();
 				console.log("Revealed!!");
 				return;
 			}
 
 			// Get URL from user
-			vscode.window.showInputBox(INPUT_BOX_OPTIONS).then((url) =>{
+			vscode.window.showInputBox(INPUT_BOX_OPTIONS).then((url) => {
 				// fetching data from website
 				return scraper.getProblem(url);
 			}).then(async (data) => {
@@ -43,7 +42,7 @@ function activate(context) {
 				webview.closeWebview();
 				const language = await pref.getDefaultLang();
 
-				if(!language || language == undefined) throw new Error("Invalid Language");
+				if (!language || language == undefined) throw new Error("Invalid Language");
 				data.language = language;
 				webview.createWebview(data, context);
 				fileManager.saveToCache(data);
@@ -56,7 +55,7 @@ function activate(context) {
 
 		})
 	);
-	
+
 	// command to update login details
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catalyst.updateLoginDetails', () => {
@@ -78,9 +77,9 @@ function activate(context) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('catalyst.showHideWebview', async () => {
 			const webviewPanel = webview.getWebviewPanel();
-			if (!webviewPanel){
+			if (!webviewPanel) {
 				const res = await checkLaunchWebview(context);
-				if(!res){
+				if (!res) {
 					vscode.window.showErrorMessage("No problem associated with this file");
 					return;
 				}
@@ -93,25 +92,25 @@ function activate(context) {
 
 	// handeling text editor change events
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
-		if(showWebview) onEditorChanged(editor, context);
+		if (showWebview) onEditorChanged(editor, context);
 	});
 
 	vscode.workspace.onDidCloseTextDocument((e) => {
 		// checks if all text editors are closed then closes the webview
 		const activeEditors = vscode.workspace.textDocuments.length;
 		console.log("Active Editors : ", activeEditors);
-		if(activeEditors == 1)
+		if (activeEditors == 1)
 			webview.closeWebview();
 	});
-	
+
 	// activate webview if current editor has webview associated with it
-	if(showWebview) checkLaunchWebview(context);
+	if (showWebview) checkLaunchWebview(context);
 
 }
 exports.activate = activate;
 
 // this method is called when your extension is deactivated
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
 	activate,
