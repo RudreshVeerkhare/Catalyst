@@ -36,7 +36,7 @@
         "commands": [
             {
                 "command": "catalyst.problemUrl",
-                "title": "Add Problem"
+                "title": "Add Problem/Contest"
             },
             {
                 "command": "catalyst.updateLoginDetails",
