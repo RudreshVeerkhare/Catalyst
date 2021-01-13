@@ -77,52 +77,6 @@ function activate(context) {
 		})
 	);
 
-	// command to add whole contest
-	context.subscriptions.push(
-		vscode.commands.registerCommand('catalyst.contestUrl', async () => {
-
-			try {
-				// get URL from user
-				const url = await vscode.window.showInputBox({
-					ignoreFocusOut: true,
-					prompt: "Enter the URL of the Contest",
-				});
-
-				// check if vaild contest URL or not
-				if (!scraper.utils.isValidContestURL(url))
-					throw new Error("Invalid Contest URL");
-
-				// getting problem data
-				const problemUrls = await scraper.getProblemUrlsFromContest(url);
-				if (!problemUrls || !problemData.length)
-					throw new Error("No problems found");
-
-				// fetching problems and creating source files
-				// getting language for source code file
-				const language = await pref.getDefaultLang();
-				if (!language || language == undefined)
-					throw new Error("Invalid Language");
-
-				// getting problem data from internet
-				let firstProb;
-				for (let i in problemUrls) {
-					console.log(i);
-					let data = await scraper.getProblem(HOSTURL + problemUrls[i]);
-					if (i == 0) firstProb = data;
-					data.language = language;
-					fileManager.saveToCache(data); // saving problem
-					fileManager.createSourceCodeFile(data); // creating source code file
-				}
-
-				// open first problem
-				webview.createWebview(firstProb, context);
-
-			} catch (err) {
-				console.log(err);
-				vscode.window.showErrorMessage(err.message);
-			}
-		})
-	);
 
 
 	// command to update login details
