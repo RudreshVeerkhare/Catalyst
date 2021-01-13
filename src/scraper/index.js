@@ -113,5 +113,35 @@ const processTestcases = (data) => {
     return data.replace(/<br>/g, '\n');
 }
 
+/**
+ * This function will returns list of all problem urls
+ * @param {String} url url of the contest
+ */
+const getProblemUrlsFromContest = async (url) => {
+    const res = await axios.get(url);
 
-module.exports.getProblem = getProblem;
+    const $ = cheerio.load(res.data);
+
+    const problems = $('table.problems').html();
+    // console.log(problems);
+
+    if (!problems)
+        throw new Error("Invalid Contest");
+    let problemUrls = [];
+    // looping through problems
+    $('table.problems > tbody').children().each((i, ele) => {
+        if (i > 0) {
+            // skip for i = 0 as it's a heading.
+            problemUrls.push($(ele).find('a').attr('href'));
+        }
+    })
+
+    return problemUrls;
+}
+
+
+module.exports = {
+    getProblem,
+    getProblemUrlsFromContest,
+    utils
+}

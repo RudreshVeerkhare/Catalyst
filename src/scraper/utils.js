@@ -12,6 +12,24 @@ const validHostname = (url) => {
 }
 
 /**
+ * to check if given URL is a valid contest URL or not
+ * @param {String} url contest URL
+ */
+
+const isValidContestURL = (url) => {
+    // check if valid Codeforces URL
+    if (!validHostname(url))
+        return false;
+
+    // check format of url
+    const regEx = new RegExp("/contest/([0-9]+)(/|)$"); // Ex. ==> "https://codeforces.com/contest/1467"
+    if (!regEx.test(url))
+        return false;
+
+    return true;
+}
+
+/**
  * returns the submit url for the problem
  * @param {String} url - url of problem Ex. "https://codeforces.com/gym/102890/problem/A" 
  */
@@ -33,22 +51,22 @@ const getProblemDetails = (url) => {
         contestId: "",
         problemIndex: ""
     }
-    if(problemsetRegex.test(url)){
+    if (problemsetRegex.test(url)) {
         const [_, contestId, problemIndex] = url.match(problemsetRegex);
         problemDetails.contestId = contestId;
         problemDetails.problemIndex = problemIndex;
         return problemDetails;
-    } else if (gymRegex.test(url)){
+    } else if (gymRegex.test(url)) {
         const [_, contestId, problemIndex] = url.match(gymRegex);
         problemDetails.contestId = contestId;
         problemDetails.problemIndex = problemIndex;
         return problemDetails;
-    } else if (contestRegex.test(url)){
+    } else if (contestRegex.test(url)) {
         const [_, contestId, problemIndex] = url.match(contestRegex);
         problemDetails.contestId = contestId;
         problemDetails.problemIndex = problemIndex;
         return problemDetails;
-    } 
+    }
 
     return null;
 }
@@ -59,5 +77,6 @@ const getProblemDetails = (url) => {
 module.exports = {
     validHostname,
     getProblemDetails,
-    getSubmitUrl
+    getSubmitUrl,
+    isValidContestURL
 }
