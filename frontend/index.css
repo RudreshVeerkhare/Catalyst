@@ -1,6 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap");
+
+html {
+    padding: 0;
+    margin: 0;
+}
 body {
     background-color: #ffffff;
+    /* background-color: #181a1b; */
+
     color: #222;
+    /* color: #D3CFC9; */
     font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
 }

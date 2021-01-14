@@ -10,6 +10,14 @@ const getLayoutRatio = () => {
     return vscode.workspace.getConfiguration('catalyst.default').get('layoutRatio') / 100;
 }
 
+
+const isDarkTheme = () => {
+    const theme = vscode.workspace.getConfiguration('catalyst.default').get('theme');
+    if (theme === "Light")
+        return false;
+    return true;
+}
+
 const getDefaultLang = async () => {
     const lang = vscode.workspace.getConfiguration('catalyst.default').get('language');
     if (lang == "Always Ask") {
@@ -141,5 +149,6 @@ module.exports = {
     getInterpreterAlias,
     getRuntimeArgs,
     getJavaMainClassName,
-    getDefaultTemplate
+    getDefaultTemplate,
+    isDarkTheme
 }

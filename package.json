@@ -87,6 +87,16 @@
                     "minimum": 30,
                     "maximum": 70
                 },
+                "catalyst.default.theme": {
+                    "title": "Theme",
+                    "type": "string",
+                    "description": "Theme of problem panel",
+                    "default": "Light",
+                    "enum": [
+                        "Light",
+                        "Dark"
+                    ]
+                },
                 "catalyst.default.language": {
                     "title": "Default Language",
                     "type": "string",

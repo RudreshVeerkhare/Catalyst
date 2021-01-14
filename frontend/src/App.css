@@ -1,0 +1,18 @@
+.app {
+    font-size: small !important;
+    padding: 0.5rem 1rem;
+}
+
+.theme-button {
+    text-decoration: none;
+    background-color: transparent;
+    border: 0;
+    right: 0;
+    top: 0;
+    padding: 1rem;
+    position: absolute;
+}
+
+.theme-button:focus {
+    outline: none;
+}

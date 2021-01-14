@@ -1,25 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { vscode } from "../../App.jsx";
+import { useTheme, useThemeUpdate } from "../../contexts/ThemeContext";
 import { MathJax, TestCase, Loader, Selector } from "../index";
 import "./ProblemStatement.css";
 import "./Style.css";
 
 const CMD_NAMES = {
     // vscode to webview
-    NEW_DATA: 'scrape',
-    CASE_RESULT: 'case-result',
-    COMPILE: 'compiling',
-    RUN_ALL_TO_SEND: 'run-all-test-cases-from-key-bindings',
+    NEW_DATA: "scrape",
+    CASE_RESULT: "case-result",
+    COMPILE: "compiling",
+    RUN_ALL_TO_SEND: "run-all-test-cases-from-key-bindings",
 
     // webview to vscode
-    SAVE_DATA: 'save-data',
-    RUN_ALL: 'run-all-testcases',
-    SUBMIT: 'submit-code',
-}
+    SAVE_DATA: "save-data",
+    RUN_ALL: "run-all-testcases",
+    SUBMIT: "submit-code",
+};
 
 const ProblemStatement = () => {
     // getting data from
     /*=============================================================*/
+    const darkMode = useTheme();
+
     const [data, setData] = useState(() => {
         const temp = window.intialData;
         window.intialData = null;
@@ -28,6 +31,12 @@ const ProblemStatement = () => {
     const [compiling, setCompiling] = useState(false);
     const [submitSelect, setSubmitSelect] = useState(false);
     const runAllRef = useRef();
+    /*=============================================================*/
+
+    const colorStyle = {
+        color: darkMode ? "#D3CFC9" : "#222",
+    };
+
     /*=============================================================*/
     useEffect(() => {
         // mount message listener for messages from backend
@@ -151,14 +160,14 @@ const ProblemStatement = () => {
         data.langId = langId;
         vscode.postMessage({
             command: CMD_NAMES.SUBMIT,
-            data: data
+            data: data,
         });
-    }
+    };
 
     /*=============================================================*/
     return data ? (
         <MathJax>
-            <div className="ttypography">
+            <div className="ttypography" style={colorStyle}>
                 <div className="problem-statement">
                     {/* Header */}
                     <div className="header">
@@ -251,7 +260,13 @@ const ProblemStatement = () => {
                             <div className="material-icons">add</div>New
                             Testcase
                         </button>
-                        <button className="submit" title="Submit on Codeforces" onClick={() => {setSubmitSelect(true)}}>
+                        <button
+                            className="submit"
+                            title="Submit on Codeforces"
+                            onClick={() => {
+                                setSubmitSelect(true);
+                            }}
+                        >
                             <div className="material-icons">done_all</div>Submit
                         </button>
                     </div>

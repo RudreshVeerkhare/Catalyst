@@ -13,7 +13,7 @@ const initWebview = (context, problemName) => {
     return vscode.window.createWebviewPanel(
         'problem',
         problemName,
-        { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true},
+        { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
         {
             enableScripts: true,
             retainContextWhenHidden: true,
@@ -62,6 +62,7 @@ const getWebviewContent = (context, problemData) => {
             <script>
                 window.acquireVsCodeApi = acquireVsCodeApi;
                 window.intialData = ${JSON.stringify(problemData)};
+                window.darkMode = ${pref.isDarkTheme()};
             </script>
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({

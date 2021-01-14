@@ -1,14 +1,14 @@
-
 /* fallback */
 @font-face {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-style: normal;
     font-weight: 400;
-    src: url(https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+    src: url(https://fonts.gstatic.com/s/materialicons/v67/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
+        format("woff2");
 }
-  
+
 .material-icons {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
@@ -19,7 +19,7 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    -webkit-font-feature-settings: 'liga';
+    -webkit-font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
 }
 
@@ -32,7 +32,8 @@ div.ttypography kbd,
 div.ttypography samp,
 div.ttypography var,
 div.ttypography tt {
-    font-family: Consolas, "Lucida Console", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier;
+    font-family: Consolas, "Lucida Console", "Andale Mono",
+        "Bitstream Vera Sans Mono", "Courier New", Courier;
 }
 
 div.ttypography {
@@ -51,8 +52,8 @@ div.ttypography .tt {
     margin: 0 4px;
     padding: 2px 4px;
     /*white-space: nowrap;*/
-    border: 1px solid #CCC;
-    background-color: #F8F8F8;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -74,7 +75,7 @@ div.ttypography h6 {
 div.ttypography h1 {
     font-size: 250%;
     line-height: 0.8571em;
-        margin: 0.4286em 0 0;
+    margin: 0.4286em 0 0;
 }
 
 div.ttypography h2 {
@@ -213,7 +214,8 @@ div.ttypography pre {
     word-wrap: break-word;
 }
 
-div.ttypography pre, div.ttypography code {
+div.ttypography pre,
+div.ttypography code {
     color: #800;
 }
 
@@ -239,7 +241,7 @@ div.ttypography acronym,
 div.ttypography abbr {
     border-bottom: 1px #aaa dotted;
     font-variant: small-caps;
-    letter-spacing: .07em;
+    letter-spacing: 0.07em;
     cursor: help;
 }
 
@@ -274,7 +276,7 @@ div.ttypography hr {
 }
 
 div.ttypography a {
-    color: #4D87C7;
+    color: #4d87c7;
     background: transparent;
     text-decoration: none;
 }
@@ -308,9 +310,9 @@ div.ttypography .bordered {
     margin-top: 1.5em;
     border: 2px #eee solid;
     border: 2px rgba(255, 255, 255, 1) solid;
-    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .25);
-    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, .25);
-    box-shadow: 0 0 3px rgba(0, 0, 0, .25);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
 }
 
 div.ttypography table {
@@ -405,16 +407,17 @@ div.ttypography pre code {
     font-size: 95%;
     position: relative;
 }
-
+/* 
 div.ttypography .MathJax {
     color: black !important;
-}
+} */
 
 /* ========================================================================================================= */
 
-
 @media print {
-    div.print-content article.node .node-blog .clearfix div.item-body p a { display: none; }
+    div.print-content article.node .node-blog .clearfix div.item-body p a {
+        display: none;
+    }
 
     .compact-problemset div.ttypography {
         margin: 0 !important;
@@ -485,8 +488,8 @@ div.ttypography .MathJax {
 }
 
 .problem-statement .epigraph {
-/*    margin-left: 67%;*/
-/*    width: 33%;*/
+    /*    margin-left: 67%;*/
+    /*    width: 33%;*/
 }
 
 .problem-statement .epigraph-text {
@@ -549,7 +552,10 @@ div.ttypography .MathJax {
     content: ":";
 }
 
-.problem-statement .time-limit, .problem-statement .memory-limit, .problem-statement .input-file, .problem-statement .output-file {
+.problem-statement .time-limit,
+.problem-statement .memory-limit,
+.problem-statement .input-file,
+.problem-statement .output-file {
     margin: 0 auto;
 }
 
@@ -565,11 +571,11 @@ div.ttypography .MathJax {
 }
 
 .problem-statement .input-specification,
-    .problem-statement .output-specification,
-    .problem-statement .sample-tests,
-    .problem-statement .author,
-    .problem-statement .resource,
-    .problem-statement .date {
+.problem-statement .output-specification,
+.problem-statement .sample-tests,
+.problem-statement .author,
+.problem-statement .resource,
+.problem-statement .date {
     /*margin-bottom: 1em;*/
 }
 
@@ -580,11 +586,12 @@ div.ttypography .MathJax {
 .problem-statement .sample-tests .sample-test {
 }
 
-.problem-statement .sample-tests .input, .problem-statement .sample-tests .output {
+.problem-statement .sample-tests .input,
+.problem-statement .sample-tests .output {
     border: 1px solid #888;
 }
 
-.problem-statement .sample-tests .input{
+.problem-statement .sample-tests .input {
     margin-top: 0.2rem;
     overflow: hidden;
 }
@@ -607,7 +614,8 @@ div.ttypography .MathJax {
 }
 
 .problem-statement .sample-tests {
-    font-family: Consolas, "Lucida Console", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier;
+    font-family: Consolas, "Lucida Console", "Andale Mono",
+        "Bitstream Vera Sans Mono", "Courier New", Courier;
     font-size: 0.9em;
 }
 
@@ -630,7 +638,8 @@ div.ttypography .MathJax {
     font-weight: bold;
 }
 
-.problem-statement .test-stem, .problem-statement .test-explanation-note {
+.problem-statement .test-stem,
+.problem-statement .test-explanation-note {
     margin: 0.5em 0 0.5em 0;
 }
 
@@ -669,7 +678,6 @@ div .problem-statement-overlay {
     margin-right: 0.5em;
 }
 
-
 .problem-statement input[type="text"] {
     width: 20em;
 }
@@ -688,17 +696,17 @@ div .problem-statement-overlay {
 }
 
 .tex-formula {
-    font-family: times new roman,sans-serif;
+    font-family: times new roman, sans-serif;
     vertical-align: middle;
     margin: 0;
-    border:medium none;
+    border: medium none;
     position: relative;
     bottom: 2px;
 }
 
 .tex-span {
     font-size: 125%;
-    font-family: times new roman,sans-serif;
+    font-family: times new roman, sans-serif;
     white-space: nowrap;
 }
 
@@ -752,7 +760,7 @@ div .problem-statement-overlay {
 
 .tex-font-style-tt {
     font-size: 110%;
-    font-family: courier new,monospace;
+    font-family: courier new, monospace;
 }
 
 .tex-font-style-md {
