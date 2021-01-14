@@ -1,18 +1,20 @@
 const encrypt = require('./encrypt');
 const vscode = require('vscode');
 const debug = require('debug')('userLogin');
+const path = require('path');
+const fs = require('fs');
 
 /**
  * @param {vscode.ExtensionContext} context 
  */
 const getCredentials = async (context) => {
     const keys = encrypt.getSecret(context);
-    if(!keys){
+    if (!keys) {
         const creds = await getLoginDataFromUser(context);
         return creds;
     }
     const encryptedCreds = await encrypt.getCredentialsFromSystem();
-    if(!encryptedCreds){
+    if (!encryptedCreds) {
         const creds = await getLoginDataFromUser(context);
         return creds;
     }
@@ -27,9 +29,9 @@ const getCredentials = async (context) => {
 const getLoginDataFromUser = async (context) => {
     // get user handle from user
     let handle, password;
-    try{
+    try {
         handle = await vscode.window.showInputBox({
-            ignoreFocusOut: true, 
+            ignoreFocusOut: true,
             prompt: "Enter email/handle for Codeforces login"
         });
 
@@ -38,7 +40,7 @@ const getLoginDataFromUser = async (context) => {
             prompt: "Enter password for Codeforces login"
         });
         if (!handle || handle == "" || !password || password == "") throw new Error();
-    } catch(err){
+    } catch (err) {
         debug(err);
         throw new Error("Invalid input");
     }
@@ -58,7 +60,18 @@ const getLoginDataFromUser = async (context) => {
     // put this encrypted password into system
     await encrypt.saveCredentialsToSystem(encryptedCreds);
 
-    return {handle, password};
+    // delete existing cookies
+    const folder = context.globalStorageUri.fsPath;
+    const cookieStorePath = path.join(folder, `cookie.json`);
+    if (fs.existsSync(folder) && fs.existsSync(cookieStorePath)) {
+        // deleting cookie file
+        fs.unlinkSync(cookieStorePath);
+        console.log("Cookies cleared");
+
+    }
+
+
+    return { handle, password };
 }
 
 module.exports = {

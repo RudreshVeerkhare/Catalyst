@@ -20,11 +20,11 @@ let auth = undefined;
 
 const loadCookies = (context) => {
     const folder = context.globalStorageUri.fsPath;
-    if(!fs.existsSync(folder)){
+    if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder);
     }
     cookieStorePath = path.join(folder, `cookie.json`);
-    if(fs.existsSync(cookieStorePath)){
+    if (fs.existsSync(cookieStorePath)) {
         // reading saved cookie from store
         const cookieData = JSON.parse(fs.readFileSync(cookieStorePath));
         // deserializing the cookieData
@@ -38,11 +38,11 @@ const loadCookies = (context) => {
 
 const loadAuth = async (context) => {
     const folder = context.globalStorageUri.fsPath;
-    if(!fs.existsSync(folder)){
+    if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder);
     }
     authStorePath = path.join(folder, `auth.json`);
-    if(fs.existsSync(authStorePath)){
+    if (fs.existsSync(authStorePath)) {
         // reading saved auth data from store
         const authData = JSON.parse(fs.readFileSync(authStorePath));
         auth = authData;
@@ -60,11 +60,11 @@ const loadAuth = async (context) => {
     return auth;
 }
 const saveAuth = () => {
-    if(!authStorePath) return;
+    if (!authStorePath) return;
     fs.writeFileSync(authStorePath, JSON.stringify(auth));
 }
 const saveCookies = () => {
-    if(!cookieStorePath) return;
+    if (!cookieStorePath) return;
     fs.writeFileSync(cookieStorePath, JSON.stringify(cookieJar.serializeSync()));
 }
 
@@ -161,7 +161,7 @@ const getChannelsAndCsrf = async (url) => {
 
     return {
         csrf_token,
-        s_channels : [
+        s_channels: [
             participantChannel,
             contentChannel,
             globalChannel,
@@ -179,7 +179,7 @@ const getChannelsAndCsrf = async (url) => {
 
 const getTta = () => {
     const cookieVal = getCookie("39ce7");
-    if (!cookieVal){
+    if (!cookieVal) {
         throw new Error('39ce7 cookie not found');
     }
 
@@ -189,9 +189,9 @@ const getTta = () => {
 }
 
 const login = async (credentials, auth) => {
-    
+
     const url = 'https://codeforces.com/enter';
-    
+
     const formData = {
         csrf_token: auth.csrf_token,
         action: 'enter',
@@ -209,10 +209,10 @@ const login = async (credentials, auth) => {
     });
 
     // post request;
-    try{
+    try {
         const response = await axios.post(url, qs.stringify(formData), {
             headers: headers,
-            jar: cookieJar, 
+            jar: cookieJar,
             withCredentials: true
         });
         console.log('Login Successful');
@@ -223,7 +223,7 @@ const login = async (credentials, auth) => {
         console.log('Login Failed', err);
         return [err, false];
     }
-    
+
 }
 
 const submit = async (problem, auth) => {
@@ -250,7 +250,7 @@ const submit = async (problem, auth) => {
         Referer: 'https://codeforces.com/problemset/submit'
     });
     // console.log(formData);
-    try{
+    try {
         const response = await axios.post(url, qs.stringify(formData), {
             headers: headers,
             jar: cookieJar,
@@ -269,9 +269,9 @@ const isSubmitError = (res) => {
     const $ = cheerio.load(res.data);
     const err = $('span.error').text();
     const submited = $('div.datatable').text();
-    if(err){
+    if (err) {
         return [err, true];
-    } else if(submited){
+    } else if (submited) {
         return [submited, false];
     }
 
@@ -282,7 +282,7 @@ const isLoginError = (res) => {
     const $ = cheerio.load(res.data);
     const err = $('span.error').text();
     console.log(err);
-    if(err){
+    if (err) {
         return [err, true];
     } else {
         return ["", false];
@@ -292,7 +292,7 @@ const isLoginError = (res) => {
 const getSubmissionId = (res) => {
     const $ = cheerio.load(res.data);
     const id = $('tr.first-row').next().attr('data-submission-id');
-    
+
     return id;
 }
 
