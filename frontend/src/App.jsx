@@ -26,7 +26,7 @@ function App() {
                 className="material-icons theme-button"
                 style={{ color: darkMode ? "#ffffff" : "#181a1b" }}
                 onClick={() => {
-                    console.log("Mode!!");
+                    // console.log("Mode!!");
                     toggleTheme(!darkMode);
                 }}
             >

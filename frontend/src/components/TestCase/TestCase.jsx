@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTheme, useThemeUpdate } from "../../contexts/ThemeContext";
 import "./TestCase.css";
 
-const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
+const TestCase = ({
+    data,
+    index,
+    removeTestCase,
+    onTestCaseEdit,
+    onRun,
+    isNew,
+}) => {
     const [collapsed, setCollapsed] = useState(false);
     const focusRef = useRef();
     /*
@@ -71,7 +78,7 @@ const TestCase = ({ data, index, removeTestCase, onTestCaseEdit, onRun }) => {
 
     useEffect(() => {
         // set focus of the element
-        focusRef.current.focus();
+        if (isNew) focusRef.current.focus();
         setColorAndSize();
     }, []);
 

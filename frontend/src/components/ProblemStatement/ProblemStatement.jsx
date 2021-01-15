@@ -22,7 +22,7 @@ const ProblemStatement = () => {
     // getting data from
     /*=============================================================*/
     const darkMode = useTheme();
-
+    const prevTestcaseCount = useRef();
     const [data, setData] = useState(() => {
         const temp = window.intialData;
         window.intialData = null;
@@ -39,12 +39,17 @@ const ProblemStatement = () => {
 
     /*=============================================================*/
     useEffect(() => {
+        // setting val of prevCaseCount
+
         // mount message listener for messages from backend
         const messageListener = (event) => {
             const message = event.data; // The JSON data our extension sent
             switch (message.command) {
                 case CMD_NAMES.NEW_DATA: {
+                    prevTestcaseCount.current =
+                        message.data.sampleTestcases.length;
                     setData(message.data);
+                    window.scrollTo(0, 0);
                     break;
                 }
                 case CMD_NAMES.CASE_RESULT: {
@@ -77,6 +82,10 @@ const ProblemStatement = () => {
         // console.log("Saving data");
         saveData();
     }, [data]);
+
+    useEffect(() => {
+        prevTestcaseCount.current = data.sampleTestcases.length;
+    });
 
     /*=============================================================*/
 
@@ -235,6 +244,9 @@ const ProblemStatement = () => {
                                         removeTestCase={removeTestCase}
                                         onTestCaseEdit={onTestCaseEdit}
                                         onRun={runSingleTestcases}
+                                        isNew={
+                                            prevTestcaseCount.current === index
+                                        }
                                     />
                                 ))}
                             </div>
