@@ -91,10 +91,10 @@
                     "title": "Theme",
                     "type": "string",
                     "description": "Theme of problem panel",
-                    "default": "Light",
+                    "default": "Dark",
                     "enum": [
-                        "Light",
-                        "Dark"
+                        "Dark",
+                        "Light"
                     ]
                 },
                 "catalyst.default.language": {
