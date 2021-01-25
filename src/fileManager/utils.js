@@ -18,10 +18,18 @@ const getHash = (name, fileExtension) => {
  * @param {String} rootPath - workspace directory path
 */
 const getProblemDataPath = (problemData, rootPath) => {
-    const hash = getHash(problemData.title, getExtensionFromLang(problemData.language));
+    const hash = getHash(sanitizeTitle(problemData.title), getExtensionFromLang(problemData.language));
     return path.join(rootPath, '.catalyst', `${hash}.catalyst`);
 }
 
+/**
+ * returns sanitized string of problem title
+ * @param {String} problemTitle - probelm title
+ */
+const sanitizeTitle = (problemTitle) => {
+    const re = /[\\/:"*?<>|]+/g;
+    return problemTitle.replace(re, "_");
+}
 
 /**
  *  returns path of source code file for problem 
@@ -30,7 +38,8 @@ const getProblemDataPath = (problemData, rootPath) => {
 const getProblemFilePath = (problemData) => {
     // const regex = /[\s|.]/g;
     const rootPath = getRootPath();
-    const problemName = problemData.title;
+    // Sanitize filename
+    const problemName = sanitizeTitle(problemData.title);
     const fileExtension = getExtensionFromLang(problemData.language);
     return path.join(rootPath, `${problemName}.${fileExtension}`);
 }
@@ -38,21 +47,21 @@ const getProblemFilePath = (problemData) => {
 const getBinaryLocation = (filePath) => {
     const pathProp = path.parse(filePath);
     const tempPath = path.join(getRootPath(), '.temp');
-    if(!fs.existsSync(tempPath)){
+    if (!fs.existsSync(tempPath)) {
         fs.mkdirSync(tempPath);
     }
     const binPath = path.join(tempPath, pathProp.name);
-    if(!fs.existsSync(binPath)){
+    if (!fs.existsSync(binPath)) {
         fs.mkdirSync(binPath);
     }
-    return path.join(binPath,  `${pathProp.name}.bin`);
+    return path.join(binPath, `${pathProp.name}.bin`);
 }
 
 const removeBinaries = async (problemData) => {
     const rootPath = getRootPath();
     const binDir = path.join(rootPath, '.temp', problemData.title);
-    try{
-        fs.rmdirSync(binDir, {recursive: true});
+    try {
+        fs.rmdirSync(binDir, { recursive: true });
         return true;
     } catch (error) {
         return false;

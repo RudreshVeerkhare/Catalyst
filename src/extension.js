@@ -27,7 +27,9 @@ function activate(context) {
 		vscode.commands.registerCommand('catalyst.problemUrl', async () => {
 			try {
 				// Get URL from user
-				const url = await vscode.window.showInputBox(INPUT_BOX_OPTIONS);
+				// removing extra spaces
+				const url = (await vscode.window.showInputBox(INPUT_BOX_OPTIONS)).trim();
+
 				// getting language for source code file
 				const language = await pref.getDefaultLang();
 				if (!language || language == undefined)
