@@ -53,8 +53,10 @@ const TestCase = ({
             setBgColor("");
             return;
         }
-        const userOut = data.result.stdout.replace(/(\r\n|\n)/gm, "").trim();
-        const out = data.output.replace(/(\r\n|\n)/gm, "").trim();
+        const userOut = data.result.stdout
+            .replace(/(( |\t)*)(\r\n|\n)/gm, "")
+            .trim();
+        const out = data.output.replace(/(( |\t)*)(\r\n|\n)/gm, "").trim();
         if (
             !data.result.timeout &&
             userOut === out &&
