@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const vscode = require('vscode');
 const path = require('path');
 const fs = require('fs');
+const pref = require('../preferences');
 
 /**
  *  returns a MD5 hash of given string
@@ -91,7 +92,7 @@ const getRootPath = (silent = false) => {
 const getProblemDataFromEditorPath = (absPath) => {
     const extension = path.extname(absPath);
     const filename = path.basename(absPath, extension);
-    const rootPath = getRootPath();
+    const rootPath = pref.getCacheFolder();
     return path.join(rootPath, '.catalyst', `${getHash(filename, extension.substring(1))}.catalyst`);
 }
 

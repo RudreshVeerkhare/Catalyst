@@ -2,7 +2,7 @@
     "name": "catalyst",
     "displayName": "Catalyst",
     "description": "Accelerates Competitive Coding on Codeforces",
-    "version": "0.0.10",
+    "version": "1.1.11",
     "engines": {
         "vscode": "^1.51.0"
     },
@@ -108,6 +108,12 @@
                         "python",
                         "java"
                     ]
+                },
+                "catalyst.default.saveLocation": {
+                    "title": "Default Problem Save Path",
+                    "type": "string",
+                    "description": "Path for folder to store problem data. Default is working director",
+                    "default": ""
                 },
                 "catalyst.default.template.c++": {
                     "title": "C++ template",

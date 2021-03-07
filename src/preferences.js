@@ -1,105 +1,204 @@
-const fs = require('fs');
-const vscode = require('vscode');
-const LANGUAGES = [
-    'c++',
-    'python',
-    'java'
-]
+const fs = require("fs");
+const vscode = require("vscode");
+const path = require("path");
+const LANGUAGES = ["c++", "python", "java"];
 
 const getLayoutRatio = () => {
-    return vscode.workspace.getConfiguration('catalyst.default').get('layoutRatio') / 100;
-}
+    return (
+        vscode.workspace
+            .getConfiguration("catalyst.default")
+            .get("layoutRatio") / 100
+    );
+};
 
+const shiftProblemData = (targetPath) => {
+    const folders = vscode.workspace.workspaceFolders;
+    if (!folders || !folders.length) return;
+    const rootPath = folders[0].uri.fsPath; // working directory
+
+    // check if cache folder exits or not
+    const cache = path.join(rootPath, ".catalyst");
+    if (!fs.existsSync(cache)) return;
+
+    // move all files from folder to current folder
+    const files = fs.readdirSync(cache);
+    for (const file of files) {
+        if (file.endsWith(".catalyst")) {
+            fs.rename(
+                path.join(cache, file),
+                path.join(targetPath, file),
+                (err) => {
+                    if (err) console.log(err);
+                }
+            );
+        }
+    }
+    // remove old cache folder after moving files
+    fs.rmdirSync(cache);
+};
+
+const getCacheFolder = () => {
+    const pathDir = vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("saveLocation");
+    // if path is empty string then use save location as working dir
+    if (pathDir === "") {
+        // get root working dir
+        const folders = vscode.workspace.workspaceFolders;
+        if (!folders || !folders.length)
+            throw new Error("No workspace is opened!!!");
+        const rootPath = folders[0].uri.fsPath; // working directory
+
+        // check if cache folder exits or not
+        const cache = path.join(rootPath, ".catalyst");
+        if (!fs.existsSync(cache)) {
+            // if doesn't exists create it
+            fs.mkdirSync(cache);
+        }
+
+        return rootPath;
+    }
+
+    // if path is not empty
+    // check if path is valid or not
+    try {
+        if (fs.existsSync(pathDir)) {
+            const cache = path.join(pathDir, ".catalyst"); // check if cache folder exits or not
+            if (!fs.existsSync(cache)) {
+                // if doesn't exists create it
+                fs.mkdirSync(cache);
+            }
+
+            // if it's new path then move all data files from workspace root to current cache folder
+            shiftProblemData(cache);
+
+            return pathDir;
+        } else {
+            vscode.window.showErrorMessage(
+                "Error while reading template file: " +
+                    path +
+                    " doesn't exists!"
+            );
+        }
+    } catch (err) {
+        vscode.window.showErrorMessage(
+            "Error while reading template file: " + err.message
+        );
+    }
+};
 
 const isDarkTheme = () => {
-    const theme = vscode.workspace.getConfiguration('catalyst.default').get('theme');
-    if (theme === "Light")
-        return false;
+    const theme = vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("theme");
+    if (theme === "Light") return false;
     return true;
-}
+};
 
 const getDefaultLang = async () => {
-    const lang = vscode.workspace.getConfiguration('catalyst.default').get('language');
+    const lang = vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("language");
     if (lang == "Always Ask") {
         const selected = await vscode.window.showQuickPick(LANGUAGES, {
-            ignoreFocusOut: true
+            ignoreFocusOut: true,
         });
         console.log(selected);
         return selected;
     }
     return lang;
-}
+};
 
 const getInterpreterAlias = (language) => {
     switch (language) {
         case "python": {
-            return vscode.workspace.getConfiguration('catalyst.lang.python').get('interpreter');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.python")
+                .get("interpreter");
         }
         case "java": {
-            return vscode.workspace.getConfiguration('catalyst.lang.java').get('interpreter');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.java")
+                .get("interpreter");
         }
 
         default:
             return null;
     }
-}
+};
 
 const getCompilerAlias = (language) => {
     switch (language) {
         case "c++": {
-            return vscode.workspace.getConfiguration('catalyst.lang.cpp').get('compiler');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.cpp")
+                .get("compiler");
         }
         case "java": {
-            return vscode.workspace.getConfiguration('catalyst.lang.java').get('compiler');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.java")
+                .get("compiler");
         }
 
         default:
             throw new Error(`No Compiler specified for ${language}`);
     }
-}
+};
 
 const getCompileArgs = (language) => {
     switch (language) {
         case "c++": {
-            return vscode.workspace.getConfiguration('catalyst.lang.cpp').get('args');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.cpp")
+                .get("args");
         }
         case "java": {
-            return vscode.workspace.getConfiguration('catalyst.lang.java.compile').get('args');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.java.compile")
+                .get("args");
         }
 
         default:
             throw new Error(`No Compiler Args specified for ${language}`);
     }
-}
+};
 
 const getRuntimeArgs = (language) => {
     switch (language) {
         case "python": {
-            return vscode.workspace.getConfiguration('catalyst.lang.python').get('args');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.python")
+                .get("args");
         }
         case "java": {
-            return vscode.workspace.getConfiguration('catalyst.lang.java.runtime').get('args');
+            return vscode.workspace
+                .getConfiguration("catalyst.lang.java.runtime")
+                .get("args");
         }
 
         default:
-            return '';
+            return "";
     }
-}
+};
 
 const getJavaMainClassName = () => {
-    return vscode.workspace.getConfiguration('catalyst.lang.java').get('mainClass');
-}
+    return vscode.workspace
+        .getConfiguration("catalyst.lang.java")
+        .get("mainClass");
+};
 
 /**
- * 
- * @param {String} lang 
+ *
+ * @param {String} lang
  */
 const getDefaultTemplate = (lang) => {
     let templatePath = undefined;
 
     switch (lang) {
         case "python": {
-            const path = vscode.workspace.getConfiguration('catalyst.default.template').get('python');
+            const path = vscode.workspace
+                .getConfiguration("catalyst.default.template")
+                .get("python");
             if (!(!path || path == "")) {
                 templatePath = path;
             }
@@ -107,7 +206,9 @@ const getDefaultTemplate = (lang) => {
         }
 
         case "c++": {
-            const path = vscode.workspace.getConfiguration('catalyst.default.template').get('c++');
+            const path = vscode.workspace
+                .getConfiguration("catalyst.default.template")
+                .get("c++");
             if (!(!path || path == "")) {
                 templatePath = path;
             }
@@ -115,7 +216,9 @@ const getDefaultTemplate = (lang) => {
         }
 
         case "java": {
-            const path = vscode.workspace.getConfiguration('catalyst.default.template').get('java');
+            const path = vscode.workspace
+                .getConfiguration("catalyst.default.template")
+                .get("java");
             if (!(!path || path == "")) {
                 templatePath = path;
             }
@@ -125,21 +228,27 @@ const getDefaultTemplate = (lang) => {
             break;
     }
 
-    if (!templatePath || templatePath == "")
-        return "";
+    if (!templatePath || templatePath == "") return "";
 
     try {
         // console.log(templatePath);
         if (fs.existsSync(templatePath)) {
             return fs.readFileSync(templatePath).toString();
+        } else {
+            vscode.window.showErrorMessage(
+                "Error while reading template file: " +
+                    templatePath +
+                    " does not exists!"
+            );
         }
     } catch (err) {
-        vscode.window.showErrorMessage("Error while reading template file: " + err.message);
+        vscode.window.showErrorMessage(
+            "Error while reading template file: " + err.message
+        );
     }
 
     return "";
-
-}
+};
 
 module.exports = {
     getLayoutRatio,
@@ -150,5 +259,6 @@ module.exports = {
     getRuntimeArgs,
     getJavaMainClassName,
     getDefaultTemplate,
-    isDarkTheme
-}
+    isDarkTheme,
+    getCacheFolder,
+};
