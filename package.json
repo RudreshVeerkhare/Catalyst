@@ -215,7 +215,7 @@
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "tough-cookie": "^4.0.0",
-        "urijs": "^1.19.5",
+        "urijs": "^1.19.6",
         "websocket": "^1.0.33"
     }
 }
