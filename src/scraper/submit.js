@@ -4,7 +4,7 @@ const userLoginHandler = require('./userLoginHandler');
 const httpSubmitStatus = require('./httpSubmitStatus');
 
 const LOGIN_URL = 'https://codeforces.com/enter';
-HOME_PAGE = 'https://codeforces.com';
+const HOME_PAGE = 'https://codeforces.com';
 
 const Submit = async (context, problem, progressHandler) => {
     let statusPromise, resultPromise;

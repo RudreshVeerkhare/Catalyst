@@ -3,6 +3,7 @@ const utils = require('./utils');
 const fileManager = require('../fileManager');
 const codeRunner = require('../codeRunner');
 const Submit = require('../scraper/submit');
+const getEditorial = require('../scraper/editorial');
 let currentPanel = undefined;
 let Context = undefined;
 let lang = undefined;
@@ -12,11 +13,13 @@ const CMD_NAMES = {
     CASE_RESULT: 'case-result',
     COMPILE: 'compiling',
     RUN_ALL_TO_SEND: 'run-all-test-cases-from-key-bindings',
+    GOT_EDITORIAL: 'got-editorial',
 
     // webview to vscode
     SAVE_DATA: 'save-data',
     RUN_ALL: 'run-all-testcases',
     SUBMIT: 'submit-code',
+    GET_EDITORIAL: 'get-editorial',
 }
 
 
@@ -30,10 +33,10 @@ const createWebview = async (problemData, context) => {
     Context = context;
     // checking problem data
     if (!problemData) throw new Error("Problem Data is currupted!!");
-    
+
     // set layout for the webview
     await utils.initLayout();
-    
+
     // sets language of the problem
     lang = problemData.language;
 
@@ -51,12 +54,12 @@ const createWebview = async (problemData, context) => {
           context.subscriptions
         );
 
-        // registering listeners 
+        // registering listeners
         registerListener();
 
         // populating webview
         currentPanel.webview.html = utils.getWebviewContent(context, problemData);
-        
+
     }
 }
 
@@ -122,6 +125,18 @@ const registerListener = () => {
                     }, (progress, token) => submitProblem(message.data, progress));
                     break;
                 }
+                case CMD_NAMES.GET_EDITORIAL: {
+                    vscode.window.withProgress({
+                        location: vscode.ProgressLocation.Notification,
+                        cancellable: false
+                    }, async (progress, token) => {
+                        await sendData({
+                            command: CMD_NAMES.GOT_EDITORIAL,
+                            data: await getEditorial(Context, message.data, progress)
+                        });
+                    });
+                    break;
+                }
             }
         }
     );
@@ -178,7 +193,7 @@ const submitProblem = async (problemData, progress) => {
 const runCases = async (problemData, id = null) => {
     // runs all the test case
 
-    // COMPILE <= {language specs, flags, output location} 
+    // COMPILE <= {language specs, flags, output location}
     await sendData({
         command: CMD_NAMES.COMPILE,
         data: true
@@ -221,7 +236,7 @@ const runCases = async (problemData, id = null) => {
 
 
 /**
- * send the data to fronend 
+ * send the data to fronend
  * @param {Object} data -  data
  */
 const sendData = async (data) => {

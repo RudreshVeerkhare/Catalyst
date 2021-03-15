@@ -2,12 +2,13 @@
     margin: 5px;
 }
 
+.control-btns .right{
+    float: right;
+}
 .control-btns .submit{
     margin-right: 0;
-    float: right;
 }
 
 .control-btns .run-all{
     margin-left: 0;
 }
-
