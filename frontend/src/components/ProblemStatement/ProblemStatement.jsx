@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { vscode } from "../../App.jsx";
 import { useTheme, useThemeUpdate } from "../../contexts/ThemeContext";
-import { MathJax, TestCase, Loader, Selector } from "../index";
+import { MathJax, TestCase, Loader, Selector, Editorial } from "../index";
 import "./ProblemStatement.css";
 import "./Style.css";
 
@@ -11,11 +11,13 @@ const CMD_NAMES = {
     CASE_RESULT: "case-result",
     COMPILE: "compiling",
     RUN_ALL_TO_SEND: "run-all-test-cases-from-key-bindings",
+    GOT_EDITORIAL: "got-editorial",
 
     // webview to vscode
     SAVE_DATA: "save-data",
     RUN_ALL: "run-all-testcases",
     SUBMIT: "submit-code",
+    GET_EDITORIAL: "get-editorial",
 };
 
 const ProblemStatement = () => {
@@ -31,6 +33,7 @@ const ProblemStatement = () => {
     const [compiling, setCompiling] = useState(false);
     const [submitSelect, setSubmitSelect] = useState(false);
     const runAllRef = useRef();
+    const [editorialExpanded, setEditorialExpanded] = useState(false);
     /*=============================================================*/
 
     const colorStyle = {
@@ -78,6 +81,9 @@ const ProblemStatement = () => {
     }, []);
 
     useEffect(() => {
+        // hide editorial after problem change
+        setEditorialExpanded(false);
+
         // saving data in file
         // console.log("Saving data");
         saveData();
@@ -156,7 +162,7 @@ const ProblemStatement = () => {
         setData((prevData) => ({
             ...prevData,
             sampleTestcases: prevData.sampleTestcases.map((testcase, i) => {
-                if (i == index) {
+                if (i === index) {
                     if (type === "input") return { ...testcase, input: data };
                     if (type === "output") return { ...testcase, output: data };
                 }
@@ -171,6 +177,14 @@ const ProblemStatement = () => {
             command: CMD_NAMES.SUBMIT,
             data: data,
         });
+    };
+
+    const getEditorial = (problemData) => {
+        vscode.postMessage({
+            command: CMD_NAMES.GET_EDITORIAL,
+            data: problemData,
+        });
+        console.log("Editorial Requested!");
     };
 
     /*=============================================================*/
@@ -272,16 +286,39 @@ const ProblemStatement = () => {
                             <div className="material-icons">add</div>New
                             Testcase
                         </button>
-                        <button
-                            className="submit"
-                            title="Submit on Codeforces"
-                            onClick={() => {
-                                setSubmitSelect(true);
-                            }}
-                        >
-                            <div className="material-icons">done_all</div>Submit
-                        </button>
+                        <div className="right">
+                            <button
+                                className="editorial"
+                                title={
+                                    editorialExpanded
+                                        ? "Hide editorial"
+                                        : "View editorial"
+                                }
+                                onClick={() => {
+                                    setEditorialExpanded(!editorialExpanded);
+                                    getEditorial(data);
+                                }}
+                            >
+                                <div className="material-icons">lightbulb</div>
+                                {editorialExpanded ? "Hide" : "View"} Editorial
+                            </button>
+                            <button
+                                className="submit"
+                                title="Submit on Codeforces"
+                                onClick={() => {
+                                    setSubmitSelect(true);
+                                }}
+                            >
+                                <div className="material-icons">done_all</div>
+                                Submit
+                            </button>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <div className="ttypography" style={colorStyle}>
+                <div className="problem-statement">
+                    <Editorial problemData={data} show={editorialExpanded} />
                 </div>
             </div>
             {compiling ? <Loader /> : null}
