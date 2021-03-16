@@ -11,13 +11,13 @@ const CMD_NAMES = {
     CASE_RESULT: "case-result",
     COMPILE: "compiling",
     RUN_ALL_TO_SEND: "run-all-test-cases-from-key-bindings",
-    GOT_EDITORIAL: 'got-editorial',
+    GOT_EDITORIAL: "got-editorial",
 
     // webview to vscode
     SAVE_DATA: "save-data",
     RUN_ALL: "run-all-testcases",
     SUBMIT: "submit-code",
-    GET_EDITORIAL: 'get-editorial',
+    GET_EDITORIAL: "get-editorial",
 };
 
 const ProblemStatement = () => {
@@ -34,7 +34,6 @@ const ProblemStatement = () => {
     const [submitSelect, setSubmitSelect] = useState(false);
     const runAllRef = useRef();
     const [editorialExpanded, setEditorialExpanded] = useState(false);
-    const [editorial, setEditorial] = useState({ error: null, data: "" })
     /*=============================================================*/
 
     const colorStyle = {
@@ -71,10 +70,6 @@ const ProblemStatement = () => {
                     runAllRef.current.click();
                     break;
                 }
-                case CMD_NAMES.GOT_EDITORIAL: {
-                    setEditorial(message.data);
-                    break;
-                }
             }
         };
 
@@ -86,6 +81,9 @@ const ProblemStatement = () => {
     }, []);
 
     useEffect(() => {
+        // hide editorial after problem change
+        setEditorialExpanded(false);
+
         // saving data in file
         // console.log("Saving data");
         saveData();
@@ -179,6 +177,14 @@ const ProblemStatement = () => {
             command: CMD_NAMES.SUBMIT,
             data: data,
         });
+    };
+
+    const getEditorial = (problemData) => {
+        vscode.postMessage({
+            command: CMD_NAMES.GET_EDITORIAL,
+            data: problemData,
+        });
+        console.log("Editorial Requested!");
     };
 
     /*=============================================================*/
@@ -283,11 +289,19 @@ const ProblemStatement = () => {
                         <div className="right">
                             <button
                                 className="editorial"
-                                title={editorialExpanded ? "Hide editorial" : "View editorial"}
-                                onClick={() => setEditorialExpanded(!editorialExpanded)}
+                                title={
+                                    editorialExpanded
+                                        ? "Hide editorial"
+                                        : "View editorial"
+                                }
+                                onClick={() => {
+                                    setEditorialExpanded(!editorialExpanded);
+                                    getEditorial(data);
+                                }}
                             >
-                                <div className="material-icons">lightbulb</div>{editorialExpanded ? "Hide" : "View"} Editorial
-                        </button>
+                                <div className="material-icons">lightbulb</div>
+                                {editorialExpanded ? "Hide" : "View"} Editorial
+                            </button>
                             <button
                                 className="submit"
                                 title="Submit on Codeforces"
@@ -295,15 +309,16 @@ const ProblemStatement = () => {
                                     setSubmitSelect(true);
                                 }}
                             >
-                                <div className="material-icons">done_all</div>Submit
-                        </button>
+                                <div className="material-icons">done_all</div>
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="ttypography" style={colorStyle}>
                 <div className="problem-statement">
-                    <Editorial problemData={data} show={editorialExpanded} editorialResponse={editorial} />
+                    <Editorial problemData={data} show={editorialExpanded} />
                 </div>
             </div>
             {compiling ? <Loader /> : null}

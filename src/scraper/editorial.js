@@ -1,42 +1,47 @@
-const cheerio = require('cheerio');
-const client = require('./client');
-const fileManager = require('../fileManager');
+const cheerio = require("cheerio");
+const client = require("./client");
+const fileManager = require("../fileManager");
+
+const URL = "https://codeforces.com/data/problemTutorial";
 
 const getEditorial = async (context, problemData, progressHandler) => {
     try {
         // Check if editorial had been cached previously
         const savedProblemData = fileManager.retrieveFromCache(problemData);
         if (savedProblemData && savedProblemData.editorial) {
-            return {error: null, data: savedProblemData.editorial};
+            return { error: null, data: savedProblemData.editorial };
         }
 
         progressHandler.report({
             increment: 50,
-            message: "Getting editorial..."
+            message: "Getting editorial...",
         });
 
-        const url = 'https://codeforces.com/data/problemTutorial';
         client.loadCookies(context);
         const auth = await client.loadAuth(context);
         const problemCode = problemData.contestId + problemData.problemIndex;
 
-        const response = await client.post(url, {
-            csrf_token: auth.csrf_token,
-            problemCode,
-        }, client.getHeaders({
-            Host: 'codeforces.com',
-        }));
-
-        if (!response.data.success) {
+        const response = await client.post(
+            URL,
+            {
+                csrf_token: auth.csrf_token,
+                problemCode,
+            },
+            client.getHeaders({
+                Host: "codeforces.com",
+            })
+        );
+        console.log(response.data);
+        if (response.data.success == "false") {
             progressHandler.report({
                 increment: 100,
-                message: "Editorial is not available"
+                message: "Editorial is not available",
             });
-            return {error: "Tutorial is not available", data: ""};
-        } else {
+            return { error: "Tutorial is not available", data: "" };
+        } else if (response.data.success == "true") {
             progressHandler.report({
                 increment: 100,
-                message: "Editorial successfully fetched"
+                message: "Editorial successfully fetched",
             });
             const $ = cheerio.load(response.data.html);
             const content = $(".problem-statement").html();
@@ -45,15 +50,17 @@ const getEditorial = async (context, problemData, progressHandler) => {
             problemData.editorial = content;
             fileManager.saveToCache(problemData);
 
-            return {error: null, data: content};
+            return { error: null, data: content };
         }
+
+        return { error: "Failed to fatched editorial", data: "" };
     } catch (err) {
         progressHandler.report({
             increment: 100,
-            message: "Failed due to network issue"
+            message: "Failed due to network issue",
         });
-        return {error: "Failed due to network issue", data: ""};
+        return { error: "Failed due to network issue", data: "" };
     }
-}
+};
 
 module.exports = getEditorial;
