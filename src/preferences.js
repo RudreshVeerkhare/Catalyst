@@ -37,6 +37,12 @@ const shiftProblemData = (targetPath) => {
     fs.rmdirSync(cache);
 };
 
+const showEditorialButton = () => {
+    return vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("showEditorial");
+};
+
 const getCacheFolder = (write = false) => {
     const pathDir = vscode.workspace
         .getConfiguration("catalyst.default")
@@ -263,4 +269,5 @@ module.exports = {
     getDefaultTemplate,
     isDarkTheme,
     getCacheFolder,
+    showEditorialButton,
 };

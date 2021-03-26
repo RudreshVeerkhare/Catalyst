@@ -2,7 +2,7 @@
     "name": "catalyst",
     "displayName": "Catalyst",
     "description": "Accelerates Competitive Coding on Codeforces",
-    "version": "1.1.13",
+    "version": "1.2.1",
     "engines": {
         "vscode": "^1.51.0"
     },
@@ -96,6 +96,12 @@
                         "Dark",
                         "Light"
                     ]
+                },
+                "catalyst.default.showEditorial": {
+                    "title": "Show Editorial Button",
+                    "type": "boolean",
+                    "description": "Whether to show the editorial button or not",
+                    "default": true
                 },
                 "catalyst.default.language": {
                     "title": "Default Language",

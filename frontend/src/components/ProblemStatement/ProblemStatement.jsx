@@ -5,6 +5,8 @@ import { MathJax, TestCase, Loader, Selector, Editorial } from "../index";
 import "./ProblemStatement.css";
 import "./Style.css";
 
+const showEditorialButton = window.showEditorialButton;
+
 const CMD_NAMES = {
     // vscode to webview
     NEW_DATA: "scrape",
@@ -287,21 +289,28 @@ const ProblemStatement = () => {
                             Testcase
                         </button>
                         <div className="right">
-                            <button
-                                className="editorial"
-                                title={
-                                    editorialExpanded
-                                        ? "Hide editorial"
-                                        : "View editorial"
-                                }
-                                onClick={() => {
-                                    setEditorialExpanded(!editorialExpanded);
-                                    getEditorial(data);
-                                }}
-                            >
-                                <div className="material-icons">lightbulb</div>
-                                {editorialExpanded ? "Hide" : "View"} Editorial
-                            </button>
+                            {showEditorialButton ? (
+                                <button
+                                    className="editorial"
+                                    title={
+                                        editorialExpanded
+                                            ? "Hide editorial"
+                                            : "View editorial"
+                                    }
+                                    onClick={() => {
+                                        setEditorialExpanded(
+                                            !editorialExpanded
+                                        );
+                                        getEditorial(data);
+                                    }}
+                                >
+                                    <div className="material-icons">
+                                        lightbulb
+                                    </div>
+                                    {editorialExpanded ? "Hide" : "View"}{" "}
+                                    Editorial
+                                </button>
+                            ) : null}
                             <button
                                 className="submit"
                                 title="Submit on Codeforces"

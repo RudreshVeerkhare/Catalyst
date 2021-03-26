@@ -1,8 +1,8 @@
-const vscode = require('vscode');
-const path = require('path');
-const { getProblemFilePath, getRootPath } = require('../fileManager/utils');
-const extension = require('../extension');
-const pref = require('../preferences');
+const vscode = require("vscode");
+const path = require("path");
+const { getProblemFilePath, getRootPath } = require("../fileManager/utils");
+const extension = require("../extension");
+const pref = require("../preferences");
 /**
  * create new webview and Initialize
  * @param {vscode.ExtensionContext} context
@@ -11,30 +11,29 @@ const pref = require('../preferences');
 const initWebview = (context, problemName) => {
     console.log("New webview created!!!");
     return vscode.window.createWebviewPanel(
-        'problem',
+        "problem",
         problemName,
         { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
         {
             enableScripts: true,
             retainContextWhenHidden: true,
             localResourceRoots: [
-                vscode.Uri.file(path.join(context.extensionPath, "dist"))
-            ]
+                vscode.Uri.file(path.join(context.extensionPath, "dist")),
+            ],
         }
     );
-}
+};
 
 const initLayout = async () => {
     const ratio = pref.getLayoutRatio();
-    await vscode.commands.executeCommand('vscode.setEditorLayout', {
+    await vscode.commands.executeCommand("vscode.setEditorLayout", {
         orientation: 0,
         groups: [
             { groups: [{}], size: 1 - ratio },
             { groups: [{}], size: ratio },
         ],
     });
-}
-
+};
 
 /**
  * gives the html content for webview
@@ -46,12 +45,8 @@ const getWebviewContent = (context, problemData) => {
     const reactAppPathOnDisk = vscode.Uri.file(
         path.join(context.extensionPath, "dist", "bundle.js")
     );
-    const mathJaxPathOnDisk = vscode.Uri.file(
-        path.join(context.extensionPath, "dist/mathjax", "MathJax.js")
-    );
 
     const reactAppUri = reactAppPathOnDisk.with({ scheme: "vscode-resource" });
-    const mathJaxUri = mathJaxPathOnDisk.with({ scheme: "vscode-resource" });
 
     return `
         <!DOCTYPE html>
@@ -63,6 +58,7 @@ const getWebviewContent = (context, problemData) => {
                 window.acquireVsCodeApi = acquireVsCodeApi;
                 window.intialData = ${JSON.stringify(problemData)};
                 window.darkMode = ${pref.isDarkTheme()};
+                window.showEditorialButton = ${pref.showEditorialButton()};
             </script>
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({
@@ -76,27 +72,23 @@ const getWebviewContent = (context, problemData) => {
             <script src="${reactAppUri}"></script>
         </body>
         </html>
-    `
-}
+    `;
+};
 
 const openCodeEditor = (problemData) => {
     const rootPath = getRootPath(); // getting working dir path
     const filePath = getProblemFilePath(problemData); // getting path of sorce code file
 
-    vscode.workspace.openTextDocument(filePath).then(doc => {
-        vscode.window.showTextDocument(
-            doc,
-            {
-                viewColumn: vscode.ViewColumn.One,
-            }
-        );
+    vscode.workspace.openTextDocument(filePath).then((doc) => {
+        vscode.window.showTextDocument(doc, {
+            viewColumn: vscode.ViewColumn.One,
+        });
     });
-
-}
+};
 // exports
 module.exports = {
     initWebview: initWebview,
     getWebviewContent: getWebviewContent,
     openCodeEditor: openCodeEditor,
-    initLayout: initLayout
-}
+    initLayout: initLayout,
+};
