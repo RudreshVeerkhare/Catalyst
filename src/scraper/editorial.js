@@ -31,7 +31,7 @@ const getEditorial = async (context, problemData, progressHandler) => {
                 Host: "codeforces.com",
             })
         );
-        console.log(response.data);
+
         if (response.data.success == "false") {
             progressHandler.report({
                 increment: 100,

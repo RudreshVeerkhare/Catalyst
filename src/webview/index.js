@@ -142,7 +142,7 @@ const registerListener = () => {
                             message.data,
                             progress
                         );
-                        console.log(data);
+
                         await sendData({
                             command: CMD_NAMES.GOT_EDITORIAL,
                             data,

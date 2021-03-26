@@ -8,7 +8,7 @@ const pref = require("../preferences");
 // problemData is object containing scraped problem data from Internet
 const saveToCache = (problemData) => {
     // get cache folder root path
-    const rootPath = pref.getCacheFolder();
+    const rootPath = pref.getCacheFolder(true);
 
     // get problem name
     // create md5 hash
@@ -29,7 +29,7 @@ const retrieveFromCache = (problemData) => {
 
     const problemPath = utils.getProblemDataPath(problemData, rootPath);
     return JSON.parse(fs.readFileSync(problemPath));
-  }
+};
 
 const createSourceCodeFile = (problemData) => {
     // getting path

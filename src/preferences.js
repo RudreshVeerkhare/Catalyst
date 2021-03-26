@@ -37,7 +37,7 @@ const shiftProblemData = (targetPath) => {
     fs.rmdirSync(cache);
 };
 
-const getCacheFolder = () => {
+const getCacheFolder = (write = false) => {
     const pathDir = vscode.workspace
         .getConfiguration("catalyst.default")
         .get("saveLocation");
@@ -52,6 +52,7 @@ const getCacheFolder = () => {
         // check if cache folder exits or not
         const cache = path.join(rootPath, ".catalyst");
         if (!fs.existsSync(cache)) {
+            if (!write) throw new Error("No .catalyst folder exists!");
             // if doesn't exists create it
             fs.mkdirSync(cache);
         }
@@ -65,6 +66,7 @@ const getCacheFolder = () => {
         if (fs.existsSync(pathDir)) {
             const cache = path.join(pathDir, ".catalyst"); // check if cache folder exits or not
             if (!fs.existsSync(cache)) {
+                if (!write) throw new Error("No .catalyst folder exists!");
                 // if doesn't exists create it
                 fs.mkdirSync(cache);
             }
