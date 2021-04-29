@@ -2,7 +2,7 @@
     "name": "catalyst",
     "displayName": "Catalyst",
     "description": "Accelerates Competitive Coding on Codeforces",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "engines": {
         "vscode": "^1.51.0"
     },
