@@ -52,17 +52,29 @@ function activate(context) {
 
                     // getting problem data from internet
                     for (let i in problemUrls) {
-                        // console.log(i);
-                        let data = await scraper.getProblem(
-                            HOSTURL + problemUrls[i]
-                        );
-                        if (i == 0) {
-                            // open first problem
-                            webview.createWebview(data, context);
+                        // wrapping each problem in try catch block
+                        // so that if error occured while fetching in perticular
+                        // problem, then it won't affect loading of other problems.
+                        try {
+                            // console.log(i);
+                            let data = await scraper.getProblem(
+                                HOSTURL + problemUrls[i]
+                            );
+                            if (i == 0) {
+                                // open first problem
+                                webview.createWebview(data, context);
+                            }
+                            data.language = language;
+                            fileManager.saveToCache(data); // saving problem
+                            fileManager.createSourceCodeFile(data); // creating source code file
+                        } catch (err) {
+                            console.log(err);
+                            vscode.window.showErrorMessage(
+                                `Error while loading ${
+                                    parseInt(i) + 1
+                                }th Problem : ${err.message}`
+                            );
                         }
-                        data.language = language;
-                        fileManager.saveToCache(data); // saving problem
-                        fileManager.createSourceCodeFile(data); // creating source code file
                     }
                 } else {
                     let data = await scraper.getProblem(url); // fetching data from website
