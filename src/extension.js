@@ -66,7 +66,10 @@ function activate(context) {
                             }
                             data.language = language;
                             fileManager.saveToCache(data); // saving problem
-                            fileManager.createSourceCodeFile(data); // creating source code file
+                            fileManager.createSourceCodeFile(
+                                data,
+                                data.contestId
+                            ); // creating source code file
                         } catch (err) {
                             console.log(err);
                             vscode.window.showErrorMessage(

@@ -41,13 +41,23 @@ const sanitizeTitle = (problemTitle) => {
 /**
  *  returns path of source code file for problem
  * @param {Object} problemData - title of problem extracted from internet
+ * @param {Integer} contestId - if problem is a part of contest loading, then ID of the contest
  */
-const getProblemFilePath = (problemData) => {
+const getProblemFilePath = (problemData, contestId = undefined) => {
     // const regex = /[\s|.]/g;
     const rootPath = getRootPath();
     // Sanitize filename
     const problemName = sanitizeTitle(problemData.title);
     const fileExtension = getExtensionFromLang(problemData.language);
+
+    // if contestId is given
+    if (contestId)
+        return path.join(
+            rootPath,
+            `contest_${contestId}`,
+            `${problemName}.${fileExtension}`
+        );
+
     return path.join(rootPath, `${problemName}.${fileExtension}`);
 };
 

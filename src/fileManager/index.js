@@ -3,6 +3,7 @@ const vscode = require("vscode");
 const path = require("path");
 const utils = require("./utils");
 const pref = require("../preferences");
+const { root } = require("cheerio");
 // add file handeling logic here...
 
 // problemData is object containing scraped problem data from Internet
@@ -31,14 +32,26 @@ const retrieveFromCache = (problemData) => {
     return JSON.parse(fs.readFileSync(problemPath));
 };
 
-const createSourceCodeFile = (problemData) => {
+const createSourceCodeFile = (problemData, contestId = undefined) => {
     // getting path
     const folders = vscode.workspace.workspaceFolders;
     if (!folders || !folders.length)
         throw new Error("No workspace is opened!!!");
     const rootPath = folders[0].uri.fsPath; // working directory
 
-    const problemFilePath = utils.getProblemFilePath(problemData);
+    // if loading for contest, create a folder named contest number
+    // and add all problems inside it
+    if (contestId) {
+        // modify path to contain folder name
+        const folderPath = path.join(rootPath, `contest_${contestId}`);
+        // check if folder exists
+        if (!fs.existsSync(folderPath)) {
+            // create if doesn't exists
+            fs.mkdirSync(folderPath);
+        }
+    }
+
+    const problemFilePath = utils.getProblemFilePath(problemData, contestId);
     if (!fs.existsSync(problemFilePath)) {
         const template = pref.getDefaultTemplate(problemData.language);
         fs.writeFileSync(problemFilePath, template);
