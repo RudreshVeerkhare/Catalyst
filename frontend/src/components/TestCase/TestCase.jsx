@@ -39,12 +39,12 @@ const TestCase = ({
     };
 
     const onInputChange = (event) => {
-        console.log(event.target.innerHTML);
+        console.log(event.target.innerText);
         // data.input = event.target.value;
     };
 
     const onOutputChange = (event) => {
-        console.log(event.target.innerHTML);
+        console.log(event.target.innerText);
         // data.output = event.target.value;
     };
 
@@ -140,7 +140,7 @@ const TestCase = ({
                     onBlur={(e) =>
                         onTestCaseEdit(
                             index - 1,
-                            e.target.innerHTML.trim(),
+                            e.target.innerText.trim(),
                             "input"
                         )
                     }
@@ -173,7 +173,7 @@ const TestCase = ({
                     contentEditable={true}
                     suppressContentEditableWarning={true}
                     onBlur={(e) =>
-                        onTestCaseEdit(index - 1, e.target.innerHTML, "output")
+                        onTestCaseEdit(index - 1, e.target.innerText, "output")
                     }
                     style={{
                         display: collapsed ? "none" : "",
