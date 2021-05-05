@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 const utils = require("./utils");
+const { decode } = require("html-entities");
 /**
  * @param {String} url
  * */
@@ -88,11 +89,11 @@ const getProblem = (url) => {
                     // id for testcase
                     data.sampleTestcases[index].id = dateId + index;
                     data.sampleTestcases[index].input = processTestcases(
-                        $(ele).find("pre").text()
+                        $(ele).find("pre").html()
                     );
                 } else {
                     data.sampleTestcases[index].output = processTestcases(
-                        $(ele).find("pre").text()
+                        $(ele).find("pre").html()
                     );
                 }
             });
@@ -118,6 +119,7 @@ const getProblem = (url) => {
  * @param {String} data
  */
 const processTestcases = (data) => {
+    data = decode(data);
     return data.replace(/<br>/g, "\n");
 };
 
