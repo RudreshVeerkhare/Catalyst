@@ -32,7 +32,7 @@ const retrieveFromCache = (problemData) => {
     return JSON.parse(fs.readFileSync(problemPath));
 };
 
-const createSourceCodeFile = (problemData, contestId = undefined) => {
+const createSourceCodeFile = (problemData) => {
     // getting path
     const folders = vscode.workspace.workspaceFolders;
     if (!folders || !folders.length)
@@ -41,9 +41,12 @@ const createSourceCodeFile = (problemData, contestId = undefined) => {
 
     // if loading for contest, create a folder named contest number
     // and add all problems inside it
-    if (contestId) {
+    if (problemData.isPartOfContest) {
         // modify path to contain folder name
-        const folderPath = path.join(rootPath, `contest_${contestId}`);
+        const folderPath = path.join(
+            rootPath,
+            `contest_${problemData.contestId}`
+        );
         // check if folder exists
         if (!fs.existsSync(folderPath)) {
             // create if doesn't exists
@@ -51,7 +54,7 @@ const createSourceCodeFile = (problemData, contestId = undefined) => {
         }
     }
 
-    const problemFilePath = utils.getProblemFilePath(problemData, contestId);
+    const problemFilePath = utils.getProblemFilePath(problemData);
     if (!fs.existsSync(problemFilePath)) {
         const template = pref.getDefaultTemplate(problemData.language);
         fs.writeFileSync(problemFilePath, template);

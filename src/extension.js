@@ -65,11 +65,9 @@ function activate(context) {
                                 webview.createWebview(data, context);
                             }
                             data.language = language;
+                            data.isPartOfContest = true; // to get proper path while running program
                             fileManager.saveToCache(data); // saving problem
-                            fileManager.createSourceCodeFile(
-                                data,
-                                data.contestId
-                            ); // creating source code file
+                            fileManager.createSourceCodeFile(data); // creating source code file
                         } catch (err) {
                             console.log(err);
                             vscode.window.showErrorMessage(

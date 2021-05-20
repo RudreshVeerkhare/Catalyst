@@ -34,16 +34,17 @@ const getProblemDataPath = (problemData, rootPath) => {
  * @param {String} problemTitle - probelm title
  */
 const sanitizeTitle = (problemTitle) => {
-    const re = /[\\/:"*?<>|]+/g;
+    // to make appropriate JAVA class name
+    // also to get valid filename to store
+    const re = /[^a-z0-9]+/gi; // replcaes every thing other than alphaNumeric
     return problemTitle.replace(re, "_");
 };
 
 /**
  *  returns path of source code file for problem
  * @param {Object} problemData - title of problem extracted from internet
- * @param {Integer} contestId - if problem is a part of contest loading, then ID of the contest
  */
-const getProblemFilePath = (problemData, contestId = undefined) => {
+const getProblemFilePath = (problemData) => {
     // const regex = /[\s|.]/g;
     const rootPath = getRootPath();
     // Sanitize filename
@@ -51,10 +52,10 @@ const getProblemFilePath = (problemData, contestId = undefined) => {
     const fileExtension = getExtensionFromLang(problemData.language);
 
     // if contestId is given
-    if (contestId)
+    if (problemData.isPartOfContest == true)
         return path.join(
             rootPath,
-            `contest_${contestId}`,
+            `contest_${problemData.contestId}`,
             `${problemName}.${fileExtension}`
         );
 
