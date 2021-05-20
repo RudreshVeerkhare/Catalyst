@@ -46,3 +46,4 @@ For Linux depending on your distribution, you will need to run the following com
 
 -   Currently Catalyst doesn't support Interactive Problems on Codeforces
 -   Submit option is beta feature so might misbehave sometimes, if you find any issue please report it.
+-   If you have any query, you can ask it [here](https://codeforces.com/blog/entry/86720).
