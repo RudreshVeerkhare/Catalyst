@@ -1,16 +1,19 @@
-const client = require('./client');
-const socket = require('./websocket');
-const userLoginHandler = require('./userLoginHandler');
-const httpSubmitStatus = require('./httpSubmitStatus');
+const client = require("./client");
+const socket = require("./websocket");
+const userLoginHandler = require("./userLoginHandler");
+const httpSubmitStatus = require("./httpSubmitStatus");
+const pref = require("../preferences");
 
-const LOGIN_URL = 'https://codeforces.com/enter';
-const HOME_PAGE = 'https://codeforces.com';
+// get appropriate hostname
+const HOST = pref.getHostName();
+const LOGIN_URL = `${HOST}/enter`;
+const HOME_PAGE = HOST;
 
 const Submit = async (context, problem, progressHandler) => {
     let statusPromise, resultPromise;
     progressHandler.report({
         increment: 10,
-        message: "Loading Cookies..."
+        message: "Loading Cookies...",
     });
     client.loadCookies(context);
     const auth = await client.loadAuth(context);
@@ -19,7 +22,7 @@ const Submit = async (context, problem, progressHandler) => {
     // refreshing csrf token and getting channels
     progressHandler.report({
         increment: 10,
-        message: "Getting CSRF token..."
+        message: "Getting CSRF token...",
     });
     let data = await client.getChannelsAndCsrf(problem.submitUrl);
     console.log(data);
@@ -35,16 +38,16 @@ const Submit = async (context, problem, progressHandler) => {
         socket.closeSockets();
         throw err;
     }
-
-}
-
+};
 
 const _submit = async (auth, context, data, problem, progressHandler) => {
-
-
     // ========================TRY-SUBMIT================================//
 
-    let res = await attemptSubmit({ ...auth, csrf_token: data.csrf_token }, problem, progressHandler);
+    let res = await attemptSubmit(
+        { ...auth, csrf_token: data.csrf_token },
+        problem,
+        progressHandler
+    );
 
     // =======================LOGIN-IF-FAILED============================//
     // todo: check if csrf token need to be refreshed
@@ -53,39 +56,45 @@ const _submit = async (auth, context, data, problem, progressHandler) => {
         await login(auth, context, progressHandler);
         progressHandler.report({
             increment: 10,
-            message: "Getting CSRF token..."
+            message: "Getting CSRF token...",
         });
         data = await client.getChannelsAndCsrf(problem.submitUrl);
-        res = await attemptSubmit({ ...auth, csrf_token: data.csrf_token }, problem, progressHandler);
+        res = await attemptSubmit(
+            { ...auth, csrf_token: data.csrf_token },
+            problem,
+            progressHandler
+        );
     }
 
     // =============================AFTER-SUBMIT==================================//
     const subId = afterSubmit(progressHandler, res);
 
     // const statusPromise = socket.connectStatusSocket(data.s_channels, subId);
-    const httpStatusPromise = httpSubmitStatus.getUpdate(progressHandler, subId);
+    const httpStatusPromise = httpSubmitStatus.getUpdate(
+        progressHandler,
+        subId
+    );
 
     await httpStatusPromise;
-}
+};
 
 const attemptSubmit = async (auth, problem, progressHandler) => {
-
     progressHandler.report({
         increment: 10,
-        message: "Submitting to Codeforces..."
+        message: "Submitting to Codeforces...",
     });
     let [res, success] = await client.submit(problem, auth);
     if (!success) {
         progressHandler.report({
             increment: 100,
-            message: res.message
+            message: res.message,
         });
         console.log("Submit Failed due to Network issue", res);
         throw new Error("Submit Failed due to Network issue");
     }
 
     return res;
-}
+};
 
 const afterSubmit = (progressHandler, res) => {
     // checking for submission submission
@@ -94,7 +103,7 @@ const afterSubmit = (progressHandler, res) => {
         // socket.closeConnection();
         progressHandler.report({
             increment: 100,
-            message: submitErrText
+            message: submitErrText,
         });
         throw new Error(submitErrText);
     }
@@ -102,27 +111,27 @@ const afterSubmit = (progressHandler, res) => {
     console.log(`Submission Id =>> ${submissionId}`);
 
     return submissionId;
-}
+};
 
 const login = async (auth, context, progressHandler) => {
     progressHandler.report({
-        message: "Getting Credentials.."
+        message: "Getting Credentials..",
     });
     const credentials = await userLoginHandler.getCredentials(context);
 
     progressHandler.report({
-        message: "Logging in Codeforces..."
+        message: "Logging in Codeforces...",
     });
-    console.log('wating logging in')
+    console.log("wating logging in");
     let [res, success] = await client.login(credentials, auth);
-    console.log('got result', success);
+    console.log("got result", success);
     if (!success) {
         throw new Error("Login Failed, Check Your Internet connection");
     }
 
     // checking if login succes
     const [loginErrText, isLoginErr] = client.isLoginError(res);
-    console.log('got result', success);
+    console.log("got result", success);
 
     if (isLoginErr) {
         console.log(loginErrText);
@@ -130,8 +139,8 @@ const login = async (auth, context, progressHandler) => {
     }
 
     progressHandler.report({
-        message: "Login Successful..."
+        message: "Login Successful...",
     });
-}
+};
 
 module.exports = Submit;

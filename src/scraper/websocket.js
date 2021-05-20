@@ -1,87 +1,88 @@
-const wsClient = require('websocket').client;
+const wsClient = require("websocket").client;
+const pref = require("../preferences");
+
+// get appropriate hostname
+const HOST_RAW = pref.getHostName((raw = true));
 const TIMEOUT = 45000; // 45 sec
-const URL = 'wss://pubsub.codeforces.com/ws/';
+const URL = `wss://pubsub.${HOST_RAW}/ws/`;
 let progressHandler = undefined;
 let resultSocket = {
     client: new wsClient(),
-    conn: undefined
-}
+    conn: undefined,
+};
 let statusSocket = {
     client: new wsClient(),
     conn: undefined,
-    submissionId: undefined
-}
+    submissionId: undefined,
+};
 
 // listeners for status socket
 // =====================================================================
 
-statusSocket.client.on('connectFailed', err => {
+statusSocket.client.on("connectFailed", (err) => {
     console.log(`Status socket ERROR => ${err}`);
-})
+});
 
-statusSocket.client.on('connect', conn => {
+statusSocket.client.on("connect", (conn) => {
     // closes connection after 10 sec
     setTimeout(() => {
-        conn.close()
+        conn.close();
     }, TIMEOUT);
-    console.log('Status Websocket client connected');
+    console.log("Status Websocket client connected");
     statusSocket.conn = conn;
-    conn.on('close', () => {
+    conn.on("close", () => {
         statusSocket.conn = undefined;
         console.log("Status Connection closed");
     });
-    conn.on('message', msg => {
+    conn.on("message", (msg) => {
         let data = JSON.parse(JSON.parse(msg.utf8Data).text);
-        if (data.t == 's')
-            parseData(data);
-    })
+        if (data.t == "s") parseData(data);
+    });
 });
 
 // listeners for result socket
 // =====================================================================
-resultSocket.client.on('connectFailed', err => {
+resultSocket.client.on("connectFailed", (err) => {
     console.log(`Result socket ERROR => ${err}`);
-})
+});
 
-resultSocket.client.on('connect', conn => {
+resultSocket.client.on("connect", (conn) => {
     // closes connection after 10 sec
     // setTimeout(() => {
     //     conn.close()
     // }, TIMEOUT);
-    console.log('Result Websocket client connected');
+    console.log("Result Websocket client connected");
     resultSocket.conn = conn;
-    conn.on('close', () => {
+    conn.on("close", () => {
         resultSocket.conn = undefined;
         console.log("Result Websocket Connection closed");
     });
-    conn.on('message', msg => {
+    conn.on("message", (msg) => {
         let data = JSON.parse(JSON.parse(msg.utf8Data).text);
-        if (data.t == 's') {
+        if (data.t == "s") {
             console.log(data);
             parseData(data, true);
         }
-    })
+    });
 });
 
 //=====================================================================
 
-
 const setProgressHandler = (progress) => {
     progressHandler = progress;
-}
+};
 
 /**
- * 
- * @param {Array} channels - list of all available channels 
+ *
+ * @param {Array} channels - list of all available channels
  */
 const connectResultSocket = (channels) => {
-
-    if (channels.every(val => !val)) return;
+    if (channels.every((val) => !val)) return;
 
     let url = URL;
     for (let token of channels) {
         if (!token) continue;
-        url += `${token}/`
+        url += `${token}/`;
     }
     console.log(url);
 
@@ -89,25 +90,23 @@ const connectResultSocket = (channels) => {
 
     resultSocket.client.connect(url);
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         const onClose = () => resolve();
-        resultSocket.client.addListener('connect', conn => {
-            conn.on('close', onClose);
-        })
+        resultSocket.client.addListener("connect", (conn) => {
+            conn.on("close", onClose);
+        });
     });
-
-}
-
+};
 
 /**
- * 
- * @param {Array} s_channels - list of all available channels 
+ *
+ * @param {Array} s_channels - list of all available channels
  */
 const connectStatusSocket = (s_channels, subId) => {
     let url = URL;
     for (let token of s_channels) {
         if (!token) continue;
-        url += `s_${token}/`
+        url += `s_${token}/`;
     }
     console.log(url);
 
@@ -115,24 +114,27 @@ const connectStatusSocket = (s_channels, subId) => {
     statusSocket.submissionId = subId;
     statusSocket.client.connect(url);
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         const onClose = () => resolve();
-        statusSocket.client.addListener('connect', conn => {
-            conn.on('close', onClose);
-        })
+        statusSocket.client.addListener("connect", (conn) => {
+            conn.on("close", onClose);
+        });
     });
-
-}
+};
 
 const closeSockets = () => {
     if (resultSocket.conn !== undefined) resultSocket.conn.close();
     if (statusSocket.conn !== undefined) statusSocket.conn.close();
-}
+};
 
 const parseData = (data, result = false) => {
-    if (!result && (!statusSocket.submissionId || data.d[1] != statusSocket.submissionId)) return;
+    if (
+        !result &&
+        (!statusSocket.submissionId || data.d[1] != statusSocket.submissionId)
+    )
+        return;
     // console.log(data);
-    if (typeof parseData.lastCase == 'undefined') {
+    if (typeof parseData.lastCase == "undefined") {
         // in JS functions are also object
         parseData.lastCase = -1;
     }
@@ -147,11 +149,11 @@ const parseData = (data, result = false) => {
         if (wating) {
             if (judgedTestCount == 0) {
                 progressHandler.report({
-                    message: `In Queue...`
+                    message: `In Queue...`,
                 });
             } else {
                 progressHandler.report({
-                    message: `Running on testcase ${judgedTestCount}`
+                    message: `Running on testcase ${judgedTestCount}`,
                 });
             }
         } else {
@@ -160,9 +162,8 @@ const parseData = (data, result = false) => {
                 message: `Verdict: ${verdictString}
                 Passed ${passedTestCount} cases
                 ${timeConsumed}ms
-                ${Math.floor(memoryConsumed / 1024)}KB`
+                ${Math.floor(memoryConsumed / 1024)}KB`,
             });
-
         }
 
         parseData.lastCase = judgedTestCount;
@@ -171,17 +172,20 @@ const parseData = (data, result = false) => {
         parseData.lastCase = -1;
         closeSockets();
     }
+};
 
-
-}
-
-const isWating = verdictString => {
-    return (!verdictString || verdictString == 'null' || verdictString == 'TESTING' || verdictString == 'SUBMITTED');
-}
+const isWating = (verdictString) => {
+    return (
+        !verdictString ||
+        verdictString == "null" ||
+        verdictString == "TESTING" ||
+        verdictString == "SUBMITTED"
+    );
+};
 
 module.exports = {
     connectResultSocket,
     connectStatusSocket,
     setProgressHandler,
-    closeSockets
-}
+    closeSockets,
+};

@@ -1,8 +1,11 @@
 const cheerio = require("cheerio");
 const client = require("./client");
 const fileManager = require("../fileManager");
+const pref = require("../preferences");
 
-const URL = "https://codeforces.com/data/problemTutorial";
+// get appropriate hostname
+const HOST = pref.getHostName();
+const URL = `${HOST}/data/problemTutorial`;
 
 const getEditorial = async (context, problemData, progressHandler) => {
     try {
@@ -28,7 +31,7 @@ const getEditorial = async (context, problemData, progressHandler) => {
                 problemCode,
             },
             client.getHeaders({
-                Host: "codeforces.com",
+                Host: HOST,
             })
         );
 

@@ -14,7 +14,8 @@ const INPUT_BOX_OPTIONS = {
     prompt: "Enter the URL of the Problem/Contest",
 };
 
-const HOSTURL = "https://codeforces.com";
+// get appropriate hostname
+let HOSTURL = pref.getHostName();
 
 /**
  * @param {vscode.ExtensionContext} context

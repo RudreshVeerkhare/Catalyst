@@ -258,6 +258,21 @@ const getDefaultTemplate = (lang) => {
     return "";
 };
 
+/**
+ * returns hostname for website
+ * ex. codeforce.com, codeforces.ml
+ * @param {Boolean} raw - if true return hostname with https attached
+ */
+const getHostName = (raw = false) => {
+    const _hostname = vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("hostname");
+
+    if (raw) return _hostname;
+
+    return `https://${_hostname}`;
+};
+
 module.exports = {
     getLayoutRatio,
     getDefaultLang,
@@ -270,4 +285,5 @@ module.exports = {
     isDarkTheme,
     getCacheFolder,
     showEditorialButton,
+    getHostName,
 };

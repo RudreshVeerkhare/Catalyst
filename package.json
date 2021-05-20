@@ -121,6 +121,12 @@
                     "description": "Path for folder to store problem data. Default is working director",
                     "default": ""
                 },
+                "catalyst.default.hostname": {
+                    "title": "Default Hostname",
+                    "type": "string",
+                    "description": "hostname for codeforces, add CodeForces mirror hostname here incase of problem with orignal",
+                    "default": "codeforces.com"
+                },
                 "catalyst.default.template.c++": {
                     "title": "C++ template",
                     "type": "string",
