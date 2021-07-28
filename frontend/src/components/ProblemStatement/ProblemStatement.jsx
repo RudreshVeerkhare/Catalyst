@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { vscode } from "../../App.jsx";
 import { useTheme, useThemeUpdate } from "../../contexts/ThemeContext";
 import { MathJax, TestCase, Loader, Selector, Editorial } from "../index";
+import CompilerOptions from "../Selector/CompilerOptions.js";
 import "./ProblemStatement.css";
 import "./Style.css";
 
@@ -20,6 +21,7 @@ const CMD_NAMES = {
     RUN_ALL: "run-all-testcases",
     SUBMIT: "submit-code",
     GET_EDITORIAL: "get-editorial",
+    SAVE_COMPILER_OPTION: "save-compiler-option",
 };
 
 const ProblemStatement = () => {
@@ -32,6 +34,7 @@ const ProblemStatement = () => {
         window.intialData = null;
         return temp;
     });
+
     const [compiling, setCompiling] = useState(false);
     const [submitSelect, setSubmitSelect] = useState(false);
     const runAllRef = useRef();
@@ -43,6 +46,7 @@ const ProblemStatement = () => {
     };
 
     /*=============================================================*/
+
     useEffect(() => {
         // setting val of prevCaseCount
 

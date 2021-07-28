@@ -22,6 +22,16 @@ const saveToCache = (problemData) => {
     return problemPath;
 };
 
+// stores compiler option to storage
+const saveCompilerOption = (context, data) => {
+    const folder = context.globalStorageUri.fsPath;
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder);
+    }
+    const storePath = path.join(folder, `LastCompilerOption.json`);
+    fs.writeFileSync(storePath, JSON.stringify(data));
+};
+
 // Used to retrieve problem editorial. Needed since editorials are stored in data
 // file dynamically and not immediately when the problem was initially fetched
 const retrieveFromCache = (problemData) => {
@@ -67,5 +77,6 @@ module.exports = {
     saveToCache,
     retrieveFromCache,
     createSourceCodeFile,
+    saveCompilerOption,
     utils,
 };

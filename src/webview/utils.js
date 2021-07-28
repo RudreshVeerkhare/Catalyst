@@ -1,7 +1,6 @@
 const vscode = require("vscode");
 const path = require("path");
 const { getProblemFilePath, getRootPath } = require("../fileManager/utils");
-const extension = require("../extension");
 const pref = require("../preferences");
 /**
  * create new webview and Initialize
@@ -59,6 +58,9 @@ const getWebviewContent = (context, problemData) => {
                 window.intialData = ${JSON.stringify(problemData)};
                 window.darkMode = ${pref.isDarkTheme()};
                 window.showEditorialButton = ${pref.showEditorialButton()};
+                window.prevCompilerOptions = ${JSON.stringify(
+                    pref.getLastCompilerOption(context)
+                )};
             </script>
             <script type="text/x-mathjax-config">
                 MathJax.Hub.Config({
@@ -77,7 +79,7 @@ const getWebviewContent = (context, problemData) => {
 
 const openCodeEditor = (problemData) => {
     const rootPath = getRootPath(); // getting working dir path
-    const filePath = getProblemFilePath(problemData); // getting path of sorce code file
+    const filePath = getProblemFilePath(problemData); // getting path of source code file
 
     vscode.workspace.openTextDocument(filePath).then((doc) => {
         vscode.window.showTextDocument(doc, {

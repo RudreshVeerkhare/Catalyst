@@ -273,6 +273,38 @@ const getHostName = (raw = false) => {
     return `https://${_hostname}`;
 };
 
+/**
+ * returns last submission saved compiler option
+ * if not found then returns default
+ * @param {*} context
+ */
+const getLastCompilerOption = (context) => {
+    let _data = {
+        "c++": 54,
+        python: 41,
+        java: 60,
+    };
+
+    // get save file location
+    const folder = context.globalStorageUri.fsPath;
+    if (!fs.existsSync(folder)) return _data;
+
+    // check if file exists
+    const storePath = path.join(folder, `LastCompilerOption.json`);
+    if (!fs.existsSync(storePath)) return _data;
+
+    // check if data in file
+    const data = JSON.parse(fs.readFileSync(storePath));
+    if (
+        data["c++"] === undefined ||
+        data["python"] === undefined ||
+        data["java"] === undefined
+    )
+        return _data;
+
+    return data;
+};
+
 module.exports = {
     getLayoutRatio,
     getDefaultLang,
@@ -286,4 +318,5 @@ module.exports = {
     getCacheFolder,
     showEditorialButton,
     getHostName,
+    getLastCompilerOption,
 };

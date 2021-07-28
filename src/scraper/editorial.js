@@ -60,9 +60,10 @@ const getEditorial = async (context, problemData, progressHandler) => {
     } catch (err) {
         progressHandler.report({
             increment: 100,
-            message: "Failed due to network issue",
+            message: "Failed due to some error!",
         });
-        return { error: "Failed due to network issue", data: "" };
+        console.log(err);
+        return { error: "Failed due to some error!", data: "" };
     }
 };
 

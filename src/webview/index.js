@@ -20,6 +20,7 @@ const CMD_NAMES = {
     RUN_ALL: "run-all-testcases",
     SUBMIT: "submit-code",
     GET_EDITORIAL: "get-editorial",
+    SAVE_COMPILER_OPTION: "save-compiler-option",
 };
 
 /**
@@ -110,6 +111,10 @@ const registerListener = () => {
         switch (message.command) {
             case CMD_NAMES.SAVE_DATA: {
                 fileManager.saveToCache(message.data);
+                break;
+            }
+            case CMD_NAMES.SAVE_COMPILER_OPTION: {
+                fileManager.saveCompilerOption(Context, message.data);
                 break;
             }
             case CMD_NAMES.RUN_ALL: {
