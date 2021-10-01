@@ -30,9 +30,7 @@ const getEditorial = async (context, problemData, progressHandler) => {
                 csrf_token: auth.csrf_token,
                 problemCode,
             },
-            client.getHeaders({
-                Host: HOST,
-            })
+            client.getHeaders()
         );
 
         if (response.data.success == "false") {

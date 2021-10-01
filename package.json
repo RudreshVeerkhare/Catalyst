@@ -2,7 +2,7 @@
     "name": "catalyst",
     "displayName": "Catalyst",
     "description": "Accelerates Competitive Coding on Codeforces",
-    "version": "1.6.1",
+    "version": "1.6.2",
     "engines": {
         "vscode": "^1.51.0"
     },
@@ -219,7 +219,7 @@
     "dependencies": {
         "@babel/core": "^7.12.9",
         "@babel/preset-react": "^7.12.7",
-        "axios": "^0.21.1",
+        "axios": ">=0.21.2",
         "axios-cookiejar-support": "^1.0.1",
         "cheerio": "^1.0.0-rc.3",
         "debug": "^4.3.1",
