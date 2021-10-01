@@ -1,3 +1,8 @@
+[![Version](https://vsmarketplacebadge.apphb.com/version/RudreshVeerkhare.catalyst.svg)](https://marketplace.visualstudio.com/items?itemName=RudreshVeerkhare.catalyst)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating-short/RudreshVeerkhare.catalyst.svg)](https://marketplace.visualstudio.com/items?itemName=RudreshVeerkhare.catalyst)
+[![Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/RudreshVeerkhare.catalyst.svg)](https://marketplace.visualstudio.com/items?itemName=RudreshVeerkhare.catalyst)
+
+
 # Catalyst
 
 [Catalyst](https://marketplace.visualstudio.com/items?itemName=RudreshVeerkhare.catalyst) is a VS code Extension to accelerate the process of solving problems on [Codeforces](https://codeforces.com/). It automatically fetches the problem and displays it, parses test cases, runs and evaluates your code on test cases.
