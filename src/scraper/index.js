@@ -6,10 +6,14 @@ const { decode } = require("html-entities");
  * @param {String} url
  * */
 
-const getProblem = (url) => {
+const getProblem = (url, language) => {
     // check if url belongs to codeforces.com
     if (!utils.validHostname(url)) {
         throw new Error("Not a Codeforces URL");
+    }
+    //check language of problems
+    if (language == "Russian") {
+        url += "?locale=ru"
     }
 
     return axios.get(url).then((res) => {
@@ -23,7 +27,12 @@ const getProblem = (url) => {
         if (!problem) throw new Error("Not a problem page!!");
 
         // title of the problem
-        data.title = $(".problem-statement > .header > .title").html();
+        if (language == "Russian") {
+            data.title = $(".problem-statement > .header > .title").text();
+        }
+        else {
+            data.title = $(".problem-statement > .header > .title").html();
+        }
         // contestId of the problem
         const problemCode = utils.getProblemDetails(url);
         data.contestId = problemCode.contestId;

@@ -97,6 +97,16 @@
                         "Light"
                     ]
                 },
+                "catalyst.default.problemLang": {
+                    "title": "Lang problem",
+                    "type": "string",
+                    "description": "Language of loaded tasks",
+                    "default": "English",
+                    "enum": [
+                        "English",
+                        "Russian"
+                    ]
+                },
                 "catalyst.default.showEditorial": {
                     "title": "Show Editorial Button",
                     "type": "boolean",

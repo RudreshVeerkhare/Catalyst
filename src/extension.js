@@ -17,6 +17,9 @@ const INPUT_BOX_OPTIONS = {
 // get appropriate hostname
 let HOSTURL = pref.getHostName();
 
+//get problem lang
+let problemLang = pref.getProblemLang();
+
 // temp fix for Certificate not vaild error
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 /**
@@ -61,7 +64,7 @@ function activate(context) {
                         try {
                             // console.log(i);
                             let data = await scraper.getProblem(
-                                HOSTURL + problemUrls[i]
+                                HOSTURL + problemUrls[i], problemLang
                             );
                             if (i == 0) {
                                 // open first problem
@@ -81,7 +84,7 @@ function activate(context) {
                         }
                     }
                 } else {
-                    let data = await scraper.getProblem(url); // fetching data from website
+                    let data = await scraper.getProblem(url, problemLang); // fetching data from website
                     // got the scraped data
                     webview.closeWebview();
                     data.language = language;
