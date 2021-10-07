@@ -37,10 +37,12 @@ function activate(context) {
             try {
                 // Get URL from user
                 // removing extra spaces
-                const url = (
+                let url = (
                     await vscode.window.showInputBox(INPUT_BOX_OPTIONS)
                 ).trim();
-
+                // removing all params from url
+                url = url.substring(0, url.indexOf('?'));
+                
                 // getting language for source code file
                 const language = await pref.getDefaultLang();
                 if (!language || language == undefined)
@@ -63,9 +65,13 @@ function activate(context) {
                         // problem, then it won't affect loading of other problems.
                         try {
                             // console.log(i);
-                            let data = await scraper.getProblem(
-                                HOSTURL + problemUrls[i], problemLang
-                            );
+                            let tempUrl = HOSTURL + problemUrls[i];
+                            //check the problem language
+                            if (problemLang == "Russian") {
+                                tempUrl += "?locale=ru";
+                            }
+                            //get problem data
+                            let data = await scraper.getProblem(tempUrl);
                             if (i == 0) {
                                 // open first problem
                                 webview.createWebview(data, context);
@@ -84,7 +90,12 @@ function activate(context) {
                         }
                     }
                 } else {
-                    let data = await scraper.getProblem(url, problemLang); // fetching data from website
+                    //check the problem language
+                    if (problemLang == "Russian") {
+                        url += "?locale=ru";
+                    }
+                    //get problem data
+                    let data = await scraper.getProblem(url); // fetching data from website
                     // got the scraped data
                     webview.closeWebview();
                     data.language = language;
