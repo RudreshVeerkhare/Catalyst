@@ -41,8 +41,9 @@ function activate(context) {
                     await vscode.window.showInputBox(INPUT_BOX_OPTIONS)
                 ).trim();
                 // removing all params from url
-                url = url.substring(0, url.indexOf('?'));
-                
+                if (url.includes("?")) {
+                    url = url.substring(0, url.indexOf('?'));
+                }
                 // getting language for source code file
                 const language = await pref.getDefaultLang();
                 if (!language || language == undefined)
