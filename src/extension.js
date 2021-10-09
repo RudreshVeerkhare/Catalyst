@@ -17,9 +17,6 @@ const INPUT_BOX_OPTIONS = {
 // get appropriate hostname
 let HOSTURL = pref.getHostName();
 
-//get problem lang
-let problemLang = pref.getProblemLang();
-
 // temp fix for Certificate not vaild error
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 /**
@@ -40,10 +37,7 @@ function activate(context) {
                 let url = (
                     await vscode.window.showInputBox(INPUT_BOX_OPTIONS)
                 ).trim();
-                // removing all params from url
-                if (url.includes("?")) {
-                    url = url.substring(0, url.indexOf('?'));
-                }
+
                 // getting language for source code file
                 const language = await pref.getDefaultLang();
                 if (!language || language == undefined)
@@ -67,12 +61,12 @@ function activate(context) {
                         try {
                             // console.log(i);
                             let tempUrl = HOSTURL + problemUrls[i];
-                            //check the problem language
-                            if (problemLang == "Russian") {
-                                tempUrl += "?locale=ru";
-                            }
+
                             //get problem data
-                            let data = await scraper.getProblem(tempUrl);
+                            let data = await scraper.getProblem(
+                                tempUrl,
+                                context
+                            );
                             if (i == 0) {
                                 // open first problem
                                 webview.createWebview(data, context);
@@ -91,12 +85,8 @@ function activate(context) {
                         }
                     }
                 } else {
-                    //check the problem language
-                    if (problemLang == "Russian") {
-                        url += "?locale=ru";
-                    }
                     //get problem data
-                    let data = await scraper.getProblem(url); // fetching data from website
+                    let data = await scraper.getProblem(url, context); // fetching data from website
                     // got the scraped data
                     webview.closeWebview();
                     data.language = language;

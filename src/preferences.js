@@ -121,7 +121,10 @@ const getProblemLang = () => {
     const lang = vscode.workspace
         .getConfiguration("catalyst.default")
         .get("problemLang");
-    return lang;
+
+    if (lang === "Russian") return "ru";
+
+    return "eu";
 };
 
 const getInterpreterAlias = (language) => {
