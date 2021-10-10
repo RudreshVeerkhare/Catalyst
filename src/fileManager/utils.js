@@ -36,7 +36,8 @@ const getProblemDataPath = (problemData, rootPath) => {
 const sanitizeTitle = (problemTitle) => {
     // to make appropriate JAVA class name
     // also to get valid filename to store
-    const re = /[^a-z0-9]+/gi; // replcaes every thing other than alphaNumeric
+    // support for basic cyrillic chars
+    const re = /[^a-zа-я0-9]+/gi; // replcaes every thing other than alphaNumeric
     return problemTitle.replace(re, "_");
 };
 

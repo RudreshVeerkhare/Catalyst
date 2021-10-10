@@ -101,9 +101,10 @@ const getHeaders = (oo) => {
     );
 };
 
-const get = async (url, headers) => {
+const get = async (url, headers, params = {}) => {
     const response = await axios.get(url, {
         headers: headers,
+        params: params,
         jar: cookieJar,
         withCredentials: true,
     });

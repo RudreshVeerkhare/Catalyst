@@ -1,18 +1,23 @@
 const cheerio = require("cheerio");
-const axios = require("axios");
+const axios = require("axios").default;
 const utils = require("./utils");
 const { decode } = require("html-entities");
+const pref = require("../preferences");
+const client = require("./client");
 /**
  * @param {String} url
  * */
 
-const getProblem = (url) => {
+const getProblem = (url, context) => {
     // check if url belongs to codeforces.com
     if (!utils.validHostname(url)) {
         throw new Error("Not a Codeforces URL");
     }
 
-    return axios.get(url).then((res) => {
+    client.loadCookies(context);
+    // pass the language (English / Russian ) as url params
+    const params = { locale: pref.getProblemLang() };
+    return client.get(url, {}, params).then((res) => {
         let data = {};
 
         console.log("Request status : " + res.status);
@@ -23,7 +28,7 @@ const getProblem = (url) => {
         if (!problem) throw new Error("Not a problem page!!");
 
         // title of the problem
-        data.title = $(".problem-statement > .header > .title").html();
+        data.title = $(".problem-statement > .header > .title").text();
         // contestId of the problem
         const problemCode = utils.getProblemDetails(url);
         data.contestId = problemCode.contestId;

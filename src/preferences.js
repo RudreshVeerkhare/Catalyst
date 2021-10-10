@@ -117,6 +117,16 @@ const getDefaultLang = async () => {
     return lang;
 };
 
+const getProblemLang = () => {
+    const lang = vscode.workspace
+        .getConfiguration("catalyst.default")
+        .get("problemLang");
+
+    if (lang === "Russian") return "ru";
+
+    return "en";
+};
+
 const getInterpreterAlias = (language) => {
     switch (language) {
         case "python": {
@@ -308,6 +318,7 @@ const getLastCompilerOption = (context) => {
 module.exports = {
     getLayoutRatio,
     getDefaultLang,
+    getProblemLang,
     getCompilerAlias,
     getCompileArgs,
     getInterpreterAlias,

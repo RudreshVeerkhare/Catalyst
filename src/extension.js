@@ -34,7 +34,7 @@ function activate(context) {
             try {
                 // Get URL from user
                 // removing extra spaces
-                const url = (
+                let url = (
                     await vscode.window.showInputBox(INPUT_BOX_OPTIONS)
                 ).trim();
 
@@ -60,8 +60,12 @@ function activate(context) {
                         // problem, then it won't affect loading of other problems.
                         try {
                             // console.log(i);
+                            let tempUrl = HOSTURL + problemUrls[i];
+
+                            //get problem data
                             let data = await scraper.getProblem(
-                                HOSTURL + problemUrls[i]
+                                tempUrl,
+                                context
                             );
                             if (i == 0) {
                                 // open first problem
@@ -81,7 +85,8 @@ function activate(context) {
                         }
                     }
                 } else {
-                    let data = await scraper.getProblem(url); // fetching data from website
+                    //get problem data
+                    let data = await scraper.getProblem(url, context); // fetching data from website
                     // got the scraped data
                     webview.closeWebview();
                     data.language = language;
