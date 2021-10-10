@@ -124,7 +124,7 @@ const getProblemLang = () => {
 
     if (lang === "Russian") return "ru";
 
-    return "eu";
+    return "en";
 };
 
 const getInterpreterAlias = (language) => {
