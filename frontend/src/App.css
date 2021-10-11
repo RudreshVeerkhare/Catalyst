@@ -9,10 +9,24 @@
     border: 0;
     right: 0;
     top: 0;
-    padding: 1rem;
+    margin: 1rem;
+    position: absolute;
+}
+
+.lang-button {
+    text-decoration: none;
+    background-color: transparent;
+    border: 0;
+    right: 2.5rem;
+    top: 0;
+    margin: 1rem;
     position: absolute;
 }
 
 .theme-button:focus {
+    outline: none;
+}
+
+.lang-button:focus {
     outline: none;
 }

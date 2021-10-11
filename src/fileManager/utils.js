@@ -23,7 +23,8 @@ const getHash = (name, fileExtension) => {
  */
 const getProblemDataPath = (problemData, rootPath) => {
     const hash = getHash(
-        sanitizeTitle(problemData.title),
+        // filename will always be in english
+        sanitizeTitle(problemData.title["en"]),
         getExtensionFromLang(problemData.language)
     );
     return path.join(rootPath, ".catalyst", `${hash}.catalyst`);
@@ -49,7 +50,8 @@ const getProblemFilePath = (problemData) => {
     // const regex = /[\s|.]/g;
     const rootPath = getRootPath();
     // Sanitize filename
-    const problemName = sanitizeTitle(problemData.title);
+    // always use english name for filename
+    const problemName = sanitizeTitle(problemData.title["en"]);
     const fileExtension = getExtensionFromLang(problemData.language);
 
     // if contestId is given
@@ -78,7 +80,8 @@ const getBinaryLocation = (filePath) => {
 
 const removeBinaries = async (problemData) => {
     const rootPath = getRootPath();
-    const binDir = path.join(rootPath, ".temp", problemData.title);
+    // filename will always be in english
+    const binDir = path.join(rootPath, ".temp", problemData.title["en"]);
     try {
         fs.rmdirSync(binDir, { recursive: true });
         return true;

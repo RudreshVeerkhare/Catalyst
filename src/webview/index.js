@@ -235,7 +235,7 @@ const runCases = async (problemData, id = null) => {
     let testCases = problemData.sampleTestcases;
     const language = problemData.language;
     // '2 seconds' => 2000
-    const timeout = Number(problemData.timeLimit.split(" ")[0]) * 1000;
+    const timeout = Number(problemData.timeLimit["en"].split(" ")[0]) * 1000;
     const filePath = fileManager.utils.getProblemFilePath(problemData);
 
     // filter out the testcases
