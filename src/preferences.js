@@ -271,7 +271,7 @@ const getDefaultTemplate = (lang) => {
 /**
  * returns hostname for website
  * ex. codeforce.com, codeforces.ml
- * @param {Boolean} raw - if true return hostname with https attached
+ * @param {Boolean} raw - if true return hostname without https attached
  */
 const getHostName = (raw = false) => {
     const _hostname = vscode.workspace

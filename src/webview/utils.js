@@ -57,6 +57,7 @@ const getWebviewContent = (context, problemData) => {
                 window.acquireVsCodeApi = acquireVsCodeApi;
                 window.intialData = ${JSON.stringify(problemData)};
                 window.darkMode = ${pref.isDarkTheme()};
+                window.langId = "${pref.getProblemLang()}";
                 window.showEditorialButton = ${pref.showEditorialButton()};
                 window.prevCompilerOptions = ${JSON.stringify(
                     pref.getLastCompilerOption(context)

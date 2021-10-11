@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { vscode } from "../../App.jsx";
 import { useTheme, useThemeUpdate } from "../../contexts/ThemeContext";
+import { useLanguage, useLanguageUpdate } from "../../contexts/LanguageContext";
 import { MathJax, TestCase, Loader, Selector, Editorial } from "../index";
 import CompilerOptions from "../Selector/CompilerOptions.js";
 import "./ProblemStatement.css";
 import "./Style.css";
 
 const showEditorialButton = window.showEditorialButton;
+const initLangId = window.lang;
 
 const CMD_NAMES = {
     // vscode to webview
@@ -28,6 +30,8 @@ const ProblemStatement = () => {
     // getting data from
     /*=============================================================*/
     const darkMode = useTheme();
+    const langId = useLanguage();
+
     const prevTestcaseCount = useRef();
     const [data, setData] = useState(() => {
         const temp = window.intialData;
@@ -48,8 +52,6 @@ const ProblemStatement = () => {
     /*=============================================================*/
 
     useEffect(() => {
-        // setting val of prevCaseCount
-
         // mount message listener for messages from backend
         const messageListener = (event) => {
             const message = event.data; // The JSON data our extension sent
@@ -201,54 +203,62 @@ const ProblemStatement = () => {
                     {/* Header */}
                     <div className="header">
                         {/* Problem Title */}
-                        <div className="title">{data.title}</div>
+                        <div className="title">{data.title[langId]}</div>
                         {/* Time Limit */}
                         <div className="time-limit">
                             <div className="property-title">
                                 time limit per test
                             </div>
-                            {data.timeLimit}
+                            {data.timeLimit[langId]}
                         </div>
                         {/* Memmory Limit */}
                         <div className="memory-limit">
                             <div className="property-title">
                                 memory limit per test
                             </div>
-                            {data.memLimit}
+                            {data.memLimit[langId]}
                         </div>
                         {/* Input Format */}
                         <div className="input-file">
                             <div className="property-title">input</div>
-                            {data.inputFormat}
+                            {data.inputFormat[langId]}
                         </div>
                         {/* Output Format */}
                         <div className="output-file">
                             <div className="property-title">output</div>
-                            {data.outputFormat}
+                            {data.outputFormat[langId]}
                         </div>
                     </div>
 
                     {/* Problem HTML */}
                     <div
-                        dangerouslySetInnerHTML={{ __html: data.problemHtml }}
+                        dangerouslySetInnerHTML={{
+                            __html: data.problemHtml[langId],
+                        }}
                     />
 
                     {/* Input Specifications */}
                     <div
                         className="input-specification"
-                        dangerouslySetInnerHTML={{ __html: data.inSpecsHtml }}
+                        dangerouslySetInnerHTML={{
+                            __html: data.inSpecsHtml[langId],
+                        }}
                     />
 
                     {/* Output Specifications */}
                     <div
                         className="output-specification"
-                        dangerouslySetInnerHTML={{ __html: data.outSpecsHtml }}
+                        dangerouslySetInnerHTML={{
+                            __html: data.outSpecsHtml[langId],
+                        }}
                     />
 
                     {/* Note Html*/}
                     <div
                         className="note"
-                        dangerouslySetInnerHTML={{ __html: data.noteHtml }}
+                        dangerouslySetInnerHTML={{
+                            __html: data.noteHtml[langId],
+                        }}
                     />
 
                     {/* Sample Cases */}
