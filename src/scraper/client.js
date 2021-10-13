@@ -117,8 +117,13 @@ const get = async (url, headers, params = {}) => {
     return response;
 };
 
-const post = async (url, data, headers) => {
+const post = async (url, data, headers, params = {}) => {
+    // passing language param in every request so that
+    // response will be in preferred language
     const response = await axios.post(url, qs.stringify(data), {
+        // here order is important as if lang pref present
+        // in param will override that of default
+        params: { locale: pref.getProblemLang(), ...params },
         headers: headers,
         jar: cookieJar,
         withCredentials: true,

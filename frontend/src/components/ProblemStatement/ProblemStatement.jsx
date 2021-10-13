@@ -187,10 +187,11 @@ const ProblemStatement = () => {
         });
     };
 
-    const getEditorial = (problemData) => {
+    const getEditorial = (problemData, refresh = false) => {
         vscode.postMessage({
             command: CMD_NAMES.GET_EDITORIAL,
             data: problemData,
+            refresh: refresh,
         });
         console.log("Editorial Requested!");
     };
@@ -341,7 +342,13 @@ const ProblemStatement = () => {
             </div>
             <div className="ttypography" style={colorStyle}>
                 <div className="problem-statement">
-                    <Editorial problemData={data} show={editorialExpanded} />
+                    <Editorial
+                        problemData={data}
+                        show={editorialExpanded}
+                        refreshEditorial={() => {
+                            getEditorial(data, true);
+                        }}
+                    />
                 </div>
             </div>
             {compiling ? <Loader /> : null}

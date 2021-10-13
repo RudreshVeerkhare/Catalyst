@@ -1,0 +1,8 @@
+.refresh-button {
+    text-decoration: none;
+    background-color: transparent;
+    border: 0;
+    right: 0;
+    margin: 0 1.5rem;
+    position: absolute;
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { vscode } from "../../App.jsx";
 import { MathJax } from "../index.js";
+import { useTheme } from "../../contexts/ThemeContext";
+import "./Editorial.css";
 
 const CMD_NAMES = {
     // vscode to webview
@@ -10,8 +12,9 @@ const CMD_NAMES = {
     GET_EDITORIAL: "get-editorial",
 };
 
-const Editorial = ({ show, problemData }) => {
+const Editorial = ({ show, problemData, refreshEditorial }) => {
     const [editorial, setEditorial] = useState({ error: null, data: "" });
+    const darkMode = useTheme();
     //====================================================================
 
     useEffect(() => {
@@ -47,7 +50,15 @@ const Editorial = ({ show, problemData }) => {
                     className="section-title"
                     style={{ margin: ".5em 0 .75em 0" }}
                 >
-                    Editorial
+                    Editorial{" "}
+                    <button
+                        onClick={refreshEditorial}
+                        className="material-icons refresh-button"
+                        title="Refresh Editorial"
+                        style={{ color: darkMode ? "#ffffff" : "#181a1b" }}
+                    >
+                        refresh
+                    </button>
                 </div>
                 <div
                     style={editorial.error ? { color: "#d32f2f" } : {}}

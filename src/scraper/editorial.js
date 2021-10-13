@@ -7,11 +7,16 @@ const pref = require("../preferences");
 const HOST = pref.getHostName();
 const URL = `${HOST}/data/problemTutorial`;
 
-const getEditorial = async (context, problemData, progressHandler) => {
+const getEditorial = async (
+    context,
+    problemData,
+    progressHandler,
+    refresh = false
+) => {
     try {
         // Check if editorial had been cached previously
         const savedProblemData = fileManager.retrieveFromCache(problemData);
-        if (savedProblemData && savedProblemData.editorial) {
+        if (!refresh && savedProblemData && savedProblemData.editorial) {
             return { error: null, data: savedProblemData.editorial };
         }
 

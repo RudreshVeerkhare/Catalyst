@@ -145,7 +145,8 @@ const registerListener = () => {
                         const data = await getEditorial(
                             Context,
                             message.data,
-                            progress
+                            progress,
+                            message.refresh
                         );
 
                         await sendData({
