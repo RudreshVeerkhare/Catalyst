@@ -102,9 +102,14 @@ const getHeaders = (oo) => {
 };
 
 const get = async (url, headers, params = {}) => {
+    // passing language param in every request so that
+    // response will be in preferred language
+    console.log({ locale: pref.getProblemLang(), ...params });
     const response = await axios.get(url, {
         headers: headers,
-        params: params,
+        // here order is important as if lang pref present
+        // in param will override that of default
+        params: { locale: pref.getProblemLang(), ...params },
         jar: cookieJar,
         withCredentials: true,
     });
