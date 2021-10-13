@@ -27,6 +27,17 @@ const isValidContestURL = (url) => {
     return true;
 };
 
+const isValidGymURL = (url) => {
+    // check if valid Codeforces URL
+    if (!validHostname(url)) return false;
+
+    // check format of url
+    const regEx = new RegExp("/gym/([0-9]+)(/|)$"); // Ex. ==> "https://codeforces.com/gym/1467"
+    if (!regEx.test(url)) return false;
+
+    return true;
+};
+
 /**
  * returns the submit url for the problem
  * @param {String} url - url of problem Ex. "https://codeforces.com/gym/102890/problem/A"
@@ -43,8 +54,8 @@ const getSubmitUrl = (url) => {
  */
 const getProblemDetails = (url) => {
     const problemsetRegex = new RegExp("/problemset/problem/(.*)/(.*)");
-    const gymRegex = new RegExp("/gym/(.*)/problem/(.*)");
-    const contestRegex = new RegExp("/contest/(.*)/problem/(.*)");
+    const gymRegex = new RegExp("/gym/(.*)/problem/([A-Z]*[0-9]*)");
+    const contestRegex = new RegExp("/contest/(.*)/problem/([A-Z]*[0-9]*)");
     const problemDetails = {
         contestId: "",
         problemIndex: "",
@@ -76,4 +87,5 @@ module.exports = {
     getProblemDetails,
     getSubmitUrl,
     isValidContestURL,
+    isValidGymURL,
 };
