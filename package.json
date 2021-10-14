@@ -2,7 +2,7 @@
     "name": "catalyst",
     "displayName": "Catalyst",
     "description": "Accelerates Competitive Coding on Codeforces",
-    "version": "1.7.5",
+    "version": "1.7.6",
     "engines": {
         "vscode": "^1.51.0"
     },
@@ -209,7 +209,7 @@
         "vscode:prepublish": "webpack --mode production",
         "webpack": "webpack --mode development",
         "webpack-dev": "webpack --mode development --watch",
-        "deploy": "vsce publish --yarn"
+        "deploy": "vsce publish"
     },
     "devDependencies": {
         "@types/glob": "^7.1.3",
