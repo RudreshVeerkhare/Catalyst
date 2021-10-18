@@ -137,6 +137,10 @@ const getCookie = (key) => {
         .value;
 };
 
+const setCookie = (cookieString) => {
+    cookieJar.setCookieSync(cookieString, HOST);
+};
+
 const getFtaa = () => {
     const charSet = "abcdefghijklmnopqrstuvwxyz0123456789";
     let ftaa = "";
@@ -300,6 +304,28 @@ const isLoginError = (res) => {
     }
 };
 
+/**
+ * Check if codeforces have implemented RCPC cookie check
+ * if yes then extracts required params and return in array
+ * @param res - Axios get request response
+ * @returns - Array[4] - [bool: is RCPC needed or not, a:str(hex), b:str(hex), c:str(hex)]
+ */
+const isRCPCTokenRequired = (res) => {
+    // check format of url
+    const regEx =
+        /var a=toNumbers\("([a-f0-9]+)"\),b=toNumbers\("([a-f0-9]+)"\),c=toNumbers\("([a-f0-9]+)"\)/;
+
+    if (regEx.test(res.data)) {
+        // this means RCPC check is needed
+        // get a, b, c params
+        const [_, a, b, c] = res.data.match(regEx);
+
+        return [true, a, b, c];
+    }
+
+    return [false, null, null, null];
+};
+
 const getSubmissionId = (res) => {
     const $ = cheerio.load(res.data);
     const id = $("tr.first-row").next().attr("data-submission-id");
@@ -324,4 +350,6 @@ module.exports = {
     getSubmissionId,
     loadCookies,
     loadAuth,
+    isRCPCTokenRequired,
+    setCookie,
 };
