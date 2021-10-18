@@ -45,10 +45,14 @@ function activate(context) {
 
                 // identifying Contest or Problem
                 // check if vaild contest URL or not
-                if (scraper.utils.isValidContestURL(url) || scraper.utils.isValidGymURL(url)) {
+                if (
+                    scraper.utils.isValidContestURL(url) ||
+                    scraper.utils.isValidGymURL(url)
+                ) {
                     // getting problem data
                     const problemUrls = await scraper.getProblemUrlsFromContest(
-                        url
+                        url,
+                        context
                     );
                     if (!problemUrls || !problemUrls.length)
                         throw new Error("No problems found");

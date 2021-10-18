@@ -2,9 +2,7 @@ const cheerio = require("cheerio");
 const axios = require("axios").default;
 const utils = require("./utils");
 const { decode } = require("html-entities");
-const pref = require("../preferences");
 const client = require("./client");
-const cfAES = require("./slowAES");
 
 /**
  * @param {String} url
@@ -29,27 +27,6 @@ const fetchProblemFromWeb = async (url, langIds) => {
     let responses = await Promise.all(
         langIds.map((langId) => client.get(url, {}, { locale: langId }))
     );
-
-    // check if RCPC cookie check is there
-    // ref - https://codeforces.com/blog/entry/80135
-    let [isRCPCneeded, a, b, c] = client.isRCPCTokenRequired(responses[0]);
-    if (isRCPCneeded) {
-        // calculate slowAES coookie
-        a = cfAES.toNumbers(a);
-        b = cfAES.toNumbers(b);
-        c = cfAES.toNumbers(c);
-
-        const cookie = cfAES.toHex(cfAES.slowAES.decrypt(c, 2, a, b));
-        console.log("RCPC", cookie);
-        client.setCookie(
-            "RCPC=" + cookie + "; expires=Thu, 31-Dec-37 23:55:55 GMT; path=/"
-        );
-
-        // re-fetch problem data in all languages
-        responses = await Promise.all(
-            langIds.map((langId) => client.get(url, {}, { locale: langId }))
-        );
-    }
 
     // for scraping info load using cheerio
     const cheerio_objects = responses.map((res) => cheerio.load(res.data));
@@ -212,8 +189,9 @@ const processTestcases = (data) => {
  * This function will returns list of all problem urls
  * @param {String} url url of the contest
  */
-const getProblemUrlsFromContest = async (url) => {
-    const res = await axios.get(url);
+const getProblemUrlsFromContest = async (url, context) => {
+    client.loadCookies(context);
+    const res = await client.get(url);
 
     const $ = cheerio.load(res.data);
 

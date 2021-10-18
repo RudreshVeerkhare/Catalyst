@@ -8,6 +8,7 @@ const cf = require("./codeforces");
 const fs = require("fs");
 const path = require("path");
 const pref = require("../preferences");
+const cfAES = require("./slowAES");
 
 // 10 sec timeout on response
 axios.defaults.timeout = 10000;
@@ -104,8 +105,7 @@ const getHeaders = (oo) => {
 const get = async (url, headers, params = {}) => {
     // passing language param in every request so that
     // response will be in preferred language
-
-    const response = await axios.get(url, {
+    let response = await axios.get(url, {
         headers: headers,
         // here order is important as if lang pref present
         // in param will override that of default
@@ -113,6 +113,19 @@ const get = async (url, headers, params = {}) => {
         jar: cookieJar,
         withCredentials: true,
     });
+
+    // check if RCPC check is there
+    if (clearRCPCCheck(response)) {
+        // is yes then re-fetch data as RCPC check is done
+        response = await axios.get(url, {
+            headers: headers,
+            // here order is important as if lang pref present
+            // in param will override that of default
+            params: { locale: pref.getProblemLang(), ...params },
+            jar: cookieJar,
+            withCredentials: true,
+        });
+    }
 
     return response;
 };
@@ -324,6 +337,32 @@ const isRCPCTokenRequired = (res) => {
     }
 
     return [false, null, null, null];
+};
+
+/**
+ * Checks if RCPC check is needed and if needed then
+ * calcultes and stores Cookie for RCPC check
+ * @param response - Axios response after get request
+ * @returns - returns boolean if RCPC check done or not
+ */
+const clearRCPCCheck = (response) => {
+    // check if RCPC cookie check is there
+    // ref - https://codeforces.com/blog/entry/80135
+    let [isRCPCneeded, a, b, c] = isRCPCTokenRequired(response);
+    if (isRCPCneeded) {
+        // calculate slowAES coookie
+        a = cfAES.toNumbers(a);
+        b = cfAES.toNumbers(b);
+        c = cfAES.toNumbers(c);
+
+        const cookie = cfAES.toHex(cfAES.slowAES.decrypt(c, 2, a, b));
+        console.log("RCPC", cookie);
+        setCookie(
+            "RCPC=" + cookie + "; expires=Thu, 31-Dec-37 23:55:55 GMT; path=/"
+        );
+    }
+
+    return isRCPCneeded;
 };
 
 const getSubmissionId = (res) => {
