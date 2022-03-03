@@ -60,7 +60,7 @@ function activate(context) {
                     // getting problem data from internet
                     for (let i in problemUrls) {
                         // wrapping each problem in try catch block
-                        // so that if error occured while fetching in perticular
+                        // so that if error occurred while fetching in particular
                         // problem, then it won't affect loading of other problems.
                         try {
                             // console.log(i);

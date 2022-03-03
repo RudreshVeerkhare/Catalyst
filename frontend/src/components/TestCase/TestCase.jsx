@@ -11,6 +11,7 @@ const TestCase = ({
     isNew,
 }) => {
     const [collapsed, setCollapsed] = useState(false);
+    const [stderrVisible, setStderrVisible] = useState(false);
     const focusRef = useRef();
     /*
         Accepted - #d4edc9
@@ -222,10 +223,35 @@ const TestCase = ({
                     }}
                 >
                     {data.result
-                        ? data.result.stdout.substring(0, 200) +
-                          data.result.stderr.substring(0, 300)
+                        ? data.result.stdout.substring(0, 500)
                         : "Run the Testcase"}
                 </pre>
+                {stderrVisible && (
+                    <pre
+                        style={{
+                            backgroundColor: COLOR.DARK_TESTCASE_BACK,
+                            color: COLOR.DARK_TESTCASE,
+                            borderBlockStart: "inherit",
+                        }}
+                    >
+                        {data.result.stderr.substring(0, 500)}
+                    </pre>
+                )}
+                {data.result && data.result.stderr.length > 0 && (
+                    <a
+                        style={{
+                            position: "absolute",
+                            bottom: "0px",
+                            right: "9px",
+                            fontSize: "smaller",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                        }}
+                        onClick={(e) => setStderrVisible(!stderrVisible)}
+                    >
+                        {stderrVisible ? "Hide" : "Show"} STDERR output
+                    </a>
+                )}
             </div>
         </div>
     );
