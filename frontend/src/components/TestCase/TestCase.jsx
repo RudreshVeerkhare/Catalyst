@@ -58,11 +58,7 @@ const TestCase = ({
             .replace(/(( |\t)*)(\r\n|\n)/gm, "")
             .trim();
         const out = data.output.replace(/(( |\t)*)(\r\n|\n)/gm, "").trim();
-        if (
-            !data.result.timeout &&
-            userOut === out &&
-            data.result.stderr == ""
-        ) {
+        if (!data.result.timeout && userOut === out) {
             setBgColor(COLOR.CORRECT);
             setCollapsed(true);
             return;
@@ -239,14 +235,7 @@ const TestCase = ({
                 )}
                 {data.result && data.result.stderr.length > 0 && (
                     <a
-                        style={{
-                            position: "absolute",
-                            bottom: "0px",
-                            right: "9px",
-                            fontSize: "smaller",
-                            backgroundColor: "transparent",
-                            cursor: "pointer",
-                        }}
+                        className="stderr-link"
                         onClick={(e) => setStderrVisible(!stderrVisible)}
                     >
                         {stderrVisible ? "Hide" : "Show"} STDERR output

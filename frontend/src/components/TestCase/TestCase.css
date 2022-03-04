@@ -1,4 +1,4 @@
-.controls button{
+.controls button {
     margin: 0 3px;
     text-align: center;
     display: inline-block;
@@ -12,7 +12,7 @@
     float: right;
 }
 
-* [contenteditable="true"]{
+* [contenteditable="true"] {
     display: inline-block;
     width: 100%;
 }
@@ -40,6 +40,17 @@
     text-transform: none;
     font-weight: normal;
     display: inline-block;
-    
+}
 
+.stderr-link {
+    position: absolute;
+    bottom: 0px;
+    right: 9px;
+    font-size: smaller;
+    background-color: transparent !important;
+    cursor: pointer;
+}
+
+.stderr-link:hover {
+    color: blue !important;
 }
