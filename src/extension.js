@@ -17,8 +17,6 @@ const INPUT_BOX_OPTIONS = {
 // get appropriate hostname
 let HOSTURL = pref.getHostName();
 
-// temp fix for Certificate not vaild error
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 /**
  * @param {vscode.ExtensionContext} context
  */
