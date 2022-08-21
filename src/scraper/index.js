@@ -182,6 +182,7 @@ const fetchProblemFromWeb = async (url, langIds) => {
  */
 const processTestcases = (data) => {
     data = decode(data);
+    data = data.replace(/<\/div>/g, "\n").replace(/<[^>]*>/g, "");
     return data.replace(/<br>/g, "\n");
 };
 
