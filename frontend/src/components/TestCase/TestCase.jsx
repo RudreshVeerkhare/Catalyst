@@ -79,6 +79,9 @@ const TestCase = ({
         // set focus of the element
         if (isNew) focusRef.current.focus();
         setColorAndSize();
+
+        // modify data to get inner text
+        onTestCaseEdit(index - 1, focusRef.current.innerText.trim(), "input");
     }, []);
 
     /*=============================================================*/
@@ -151,9 +154,10 @@ const TestCase = ({
                         const text = e.clipboardData.getData("text/plain");
                         onTestCaseEdit(index - 1, text.trim(), "input");
                     }}
-                >
-                    {data.input}
-                </pre>
+                    dangerouslySetInnerHTML={{
+                        __html: data.input,
+                    }}
+                ></pre>
             </div>
             <div
                 className="output"

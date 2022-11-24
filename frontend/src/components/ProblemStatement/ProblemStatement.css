@@ -833,3 +833,18 @@ div .problem-statement-overlay {
     font-size: 100%;
     font-style: italic;
 }
+
+/*Update for input styles*/
+
+.problem-statement .tex-tabular .tex-graphics {
+    max-width: 100%
+}
+
+.problem-statement .tex-tabular td>p {
+    margin-bottom: 0!important
+}
+
+.problem-statement .test-example-line-even {
+    background-color: #e0e0e0
+}
+
